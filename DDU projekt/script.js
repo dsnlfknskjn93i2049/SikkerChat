@@ -11,7 +11,7 @@ async function login() {
             document.getElementById("chatScreen").style.display = "block";
             document.getElementById("currentUserName").innerText = username;
             updateRecipientList();
-            updateMessageBox();
+            showFolder("inbox");
             updateUserSwitcher();
         } else {
             document.getElementById("loginOutput").innerText = "Forkert brugernavn eller adgangskode!";
@@ -85,39 +85,61 @@ async function sendMessage() {
             sender: currentUser,
             recipient: recipient,
             encrypted: encrypted.join(", "),
-            hash: hash
+            hash: hash,
+            folder: "inbox"
         });
         if (error) throw new Error(error.message || "Ukendt fejl ved afsendelse");
         document.getElementById("output").innerText = "Besked sendt til " + recipient + "!";
         document.getElementById("message").value = "";
-        updateMessageBox();
     } catch (error) {
         console.error("Fejl ved kryptering:", error);
         document.getElementById("output").innerText = "Fejl ved kryptering: " + error.message;
     }
 }
 
-async function decryptMessageHandler() {
+let currentMessageId = null;
+
+async function decryptAndCompare() {
     try {
-        let inputText = document.getElementById("message").value;
-        if (!inputText) throw new Error("Ingen krypteret besked indtastet!");
-        if (!inputText.includes(",")) {
-            throw new Error("Ugyldigt format! Indtast en kommasepareret liste af tal (fx 123, 456)");
-        }
-        let encryptedText = inputText.split(",").map(num => BigInt(num.trim()));
+        const messages = await fetchMessages();
+        const message = messages.find(msg => msg.id === currentMessageId);
+        if (!message) throw new Error("Besked ikke fundet!");
+        let encryptedText = message.encrypted.split(",").map(num => BigInt(num.trim()));
         const users = await fetchUsers();
         let currentUserData = users.find(u => u.username === currentUser);
         if (!currentUserData) throw new Error("Bruger ikke fundet!");
         let decrypted = window.decryptMessage(encryptedText, currentUserData.keys.privateKey);
-        let hash = await generateHash(decrypted);
-        document.getElementById("output").innerText = 
-            "Dekrypteret besked: " + decrypted + "\nHash af dekrypteret besked: " + hash;
-        document.getElementById("message").value = "";
-        alert("Tjek hash-værdien mod den originale hash for at validere beskeden!");
+        let newHash = await generateHash(decrypted);
+        let originalHash = message.hash;
+        document.getElementById("decryptedOutput").innerText = "Dekrypteret besked: " + decrypted;
+        document.getElementById("hashComparison").innerText = 
+            newHash === originalHash 
+                ? "Hash-sammenligning: Matchet! Beskeden er ikke blevet ændret."
+                : "Hash-sammenligning: Matchede ikke! Beskeden kan være blevet ændret.";
     } catch (error) {
         console.error("Fejl ved dekryptering:", error);
-        document.getElementById("output").innerText = "Fejl ved dekryptering: " + error.message;
+        document.getElementById("decryptedOutput").innerText = "Fejl ved dekryptering: " + error.message;
     }
+}
+
+async function moveMessage(folder) {
+    try {
+        const { error } = await supabase
+            .from("messages")
+            .update({ folder: folder })
+            .eq("id", currentMessageId);
+        if (error) throw new Error(error.message || "Ukendt fejl ved flytning");
+        backToInbox();
+    } catch (error) {
+        console.error("Fejl ved flytning af besked:", error);
+        alert("Fejl ved flytning af besked: " + error.message);
+    }
+}
+
+function backToInbox() {
+    document.getElementById("messageView").style.display = "none";
+    document.getElementById("chatScreen").style.display = "block";
+    showFolder(currentFolder);
 }
 
 async function switchUser() {
@@ -125,7 +147,7 @@ async function switchUser() {
     currentUser = selectedUser;
     document.getElementById("currentUserName").innerText = selectedUser;
     updateRecipientList();
-    updateMessageBox();
+    showFolder("inbox");
     document.getElementById("output").innerText = "Skiftet til " + selectedUser;
 }
 
@@ -172,15 +194,36 @@ async function updateRecipientList() {
     });
 }
 
-async function updateMessageBox() {
-    let messageBox = document.getElementById("messageBox");
-    messageBox.innerHTML = "";
+let currentFolder = "inbox";
+
+async function showFolder(folder) {
+    currentFolder = folder;
+    let inboxList = document.getElementById("inboxList");
+    inboxList.innerHTML = "";
     const messages = await fetchMessages();
-    messages.forEach(msg => {
-        if (msg.recipient === currentUser) {
-            messageBox.innerHTML += `<p>Fra: ${msg.sender} | Krypteret: ${msg.encrypted} | Hash: ${msg.hash}</p>`;
-        }
+    const filteredMessages = messages.filter(msg => msg.recipient === currentUser && msg.folder === folder);
+    if (filteredMessages.length === 0) {
+        inboxList.innerHTML = "<p>Ingen beskeder i denne mappe.</p>";
+        return;
+    }
+    filteredMessages.forEach(msg => {
+        let messageDiv = document.createElement("div");
+        messageDiv.className = "messageItem";
+        messageDiv.innerHTML = `Fra: ${msg.sender}`;
+        messageDiv.onclick = () => openMessage(msg);
+        inboxList.appendChild(messageDiv);
     });
+}
+
+function openMessage(message) {
+    currentMessageId = message.id;
+    document.getElementById("chatScreen").style.display = "none";
+    document.getElementById("messageView").style.display = "block";
+    document.getElementById("messageSender").innerText = message.sender;
+    document.getElementById("encryptedMessage").innerText = message.encrypted;
+    document.getElementById("originalHash").innerText = message.hash;
+    document.getElementById("decryptedOutput").innerText = "";
+    document.getElementById("hashComparison").innerText = "";
 }
 
 async function updateUserSwitcher() {
