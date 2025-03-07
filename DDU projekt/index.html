@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sikker Chat</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Placeholder for favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -34,15 +34,39 @@
             </select>
         </div>
         <h1>Velkommen til Sikker Chat, <span id="currentUserName"></span>!</h1>
+
+        <!-- Send besked sektion -->
+        <h2>Send en besked</h2>
         <label for="recipient">Vælg modtager:</label>
         <select id="recipient"></select>
         <br><br>
         <input type="text" id="message" placeholder="Skriv en besked...">
         <button onclick="sendMessage()">Kryptér og Send</button>
-        <button onclick="decryptMessageHandler()">Dekryptér</button>
         <p id="output"></p>
+
+        <!-- Indbakke og mapper -->
         <h2>Dine beskeder</h2>
-        <div id="messageBox"></div>
+        <div id="folderTabs">
+            <button onclick="showFolder('inbox')">Indbakke</button>
+            <button onclick="showFolder('gemt')">Gemt</button>
+            <button onclick="showFolder('slettet')">Slettet</button>
+        </div>
+        <div id="inboxList">
+            <!-- Beskedliste vises her -->
+        </div>
+    </div>
+
+    <!-- Beskedvisning -->
+    <div id="messageView" style="display: none;">
+        <h2>Besked fra <span id="messageSender"></span></h2>
+        <p><strong>Krypteret besked:</strong> <span id="encryptedMessage"></span></p>
+        <p><strong>Oprindelig hash:</strong> <span id="originalHash"></span></p>
+        <button onclick="decryptAndCompare()">Dekrypter og Sammenlign Hash</button>
+        <p id="decryptedOutput"></p>
+        <p id="hashComparison"></p>
+        <button onclick="moveMessage('gemt')">Gem</button>
+        <button onclick="moveMessage('slettet')">Slet</button>
+        <button onclick="backToInbox()">Tilbage til Indbakke</button>
     </div>
 
     <script src="rsa.js"></script>
