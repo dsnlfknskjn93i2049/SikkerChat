@@ -10,23 +10,18 @@ function generatePrime(min, max) {
 
     let prime;
     do {
-        // Brug Date.now() til at tilføje mere entropi til randomiseringen
-        const seed = Date.now() + Math.random();
-        prime = Math.floor((seed % (max - min)) + min);
-    } while (!isPrime(prime) || prime === previousPrime); // Undgå gentagelse af det forrige primtal
-    previousPrime = prime; // Gem det sidste primtal
+        prime = Math.floor(Math.random() * (max - min) + min); // Forenklet randomisering
+    } while (!isPrime(prime));
     console.log("Genereret primtal:", prime); // Debug-log
     return prime;
 }
 
-let previousPrime = null; // Global variabel til at spore det sidste primtal
-
 function generateKeys() {
     // Generer to store primtal (p og q)
-    const p = BigInt(generatePrime(10000, 50000)); // Øget rækkevidde
+    const p = BigInt(generatePrime(1000, 1500)); // Sænket til 1000-1500
     let q;
     do {
-        q = BigInt(generatePrime(10000, 50000));
+        q = BigInt(generatePrime(1000, 1500));
     } while (q === p); // Sørg for, at p og q er forskellige
 
     // Beregn n og phi(n)
@@ -37,6 +32,10 @@ function generateKeys() {
     let e = 65537n;
     while (e < phi && gcd(e, phi) !== 1n) {
         e++;
+    }
+    if (e >= phi) {
+        console.error("Kunne ikke finde en passende e-værdi inden for phi. Prøv igen.");
+        return generateKeys(); // Genstart, hvis e ikke findes
     }
 
     // Beregn d (privat eksponent)
