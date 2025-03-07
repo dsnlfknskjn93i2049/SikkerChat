@@ -1,0 +1,57 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+}
+
+input, select {
+    padding: 10px;
+    width: 80%;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: blue;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: darkblue;
+}
+
+#messageBox {
+    margin-top: 20px;
+    text-align: left;
+    max-width: 90%; /* Øget fra 80% til 90% */
+    min-height: 150px; /* Giver mere lodret plads */
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #ccc;
+    padding: 15px; /* Øget padding for bedre læsbarhed */
+    word-wrap: break-word; /* Sørger for, at lange tekster brydes */
+    overflow-y: auto; /* Tilføjer scrollbar, hvis der er meget tekst */
+}
+
+h1, h2 {
+    margin-top: 20px;
+}
+
+#loginScreen, #createUserScreen, #chatScreen {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+#userSwitcher {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    text-align: right;
+}
+
+#userSwitcher select {
+    width: auto;
+    padding: 5px;
+}

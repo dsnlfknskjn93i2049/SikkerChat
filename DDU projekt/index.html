@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sikker Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div id="loginScreen">
+        <h1>Log ind</h1>
+        <input type="text" id="username" placeholder="Brugernavn">
+        <input type="password" id="password" placeholder="Adgangskode">
+        <button onclick="login()">Log ind</button>
+        <button onclick="showCreateUser()">Opret bruger</button>
+        <p id="loginOutput"></p>
+    </div>
+
+    <div id="createUserScreen" style="display: none;">
+        <h1>Opret bruger</h1>
+        <input type="text" id="newUser" placeholder="Indtast brugernavn...">
+        <input type="password" id="newPassword" placeholder="Indtast adgangskode...">
+        <button onclick="addUser()">Opret</button>
+        <button onclick="backToLogin()">Tilbage</button>
+    </div>
+
+    <div id="chatScreen" style="display: none;">
+        <div id="userSwitcher">
+            <label for="switchUser">Skift bruger:</label>
+            <select id="switchUser" onchange="switchUser()">
+                <!-- Brugere tilføjes dynamisk -->
+            </select>
+        </div>
+        <h1>Velkommen til Sikker Chat, <span id="currentUserName"></span>!</h1>
+        <label for="recipient">Vælg modtager:</label>
+        <select id="recipient"></select>
+        <br><br>
+        <input type="text" id="message" placeholder="Skriv en besked...">
+        <button onclick="sendMessage()">Kryptér og Send</button>
+        <button onclick="decryptMessageHandler()">Dekryptér</button>
+        <p id="output"></p>
+        <h2>Dine beskeder</h2>
+        <div id="messageBox"></div>
+    </div>
+
+    <script src="rsa.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
