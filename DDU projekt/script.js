@@ -125,14 +125,18 @@ async function decryptAndCompare() {
 async function moveMessage(folder) {
     try {
         if (!currentMessageId) throw new Error("Ingen besked valgt!");
-        const { error } = await supabase
+        const { data, error } = await supabase
             .from("messages")
             .update({ folder: folder })
-            .eq("id", currentMessageId);
+            .eq("id", currentMessageId)
+            .select(); // Tilføj select for at få den opdaterede række
         if (error) throw new Error(error.message || "Ukendt fejl ved flytning");
-        // Opdater visningen efter flytning
+        if (data && data.length > 0) {
+            console.log("Besked flyttet til:", folder, data[0]);
+        }
+        // Opdater visningen korrekt ved at genindlæse den aktuelle mappe
         backToInbox();
-        showFolder(currentFolder); // Genindlæs den aktuelle mappe
+        await showFolder(currentFolder); // Vent på, at folderen genindlæses
     } catch (error) {
         console.error("Fejl ved flytning af besked:", error);
         alert("Fejl ved flytning af besked: " + error.message);
@@ -142,7 +146,6 @@ async function moveMessage(folder) {
 function backToInbox() {
     document.getElementById("messageView").style.display = "none";
     document.getElementById("chatScreen").style.display = "block";
-    showFolder(currentFolder);
 }
 
 async function switchUser() {
@@ -176,7 +179,7 @@ async function fetchMessages() {
     try {
         const { data, error } = await supabase.from("messages").select("*");
         if (error) throw new Error(error.message || "Ukendt fejl ved hentning af beskeder");
-        return data;
+        return data || [];
     } catch (error) {
         console.error("Fejl ved hentning af beskeder:", error);
         return [];
