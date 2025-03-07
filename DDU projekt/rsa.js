@@ -10,7 +10,7 @@ function generatePrime(min, max) {
 
     let prime;
     do {
-        prime = Math.floor(Math.random() * (max - min) + min); // Forenklet randomisering
+        prime = Math.floor(Math.random() * (max - min) + min);
     } while (!isPrime(prime));
     console.log("Genereret primtal:", prime); // Debug-log
     return prime;
@@ -18,10 +18,10 @@ function generatePrime(min, max) {
 
 function generateKeys() {
     // Generer to store primtal (p og q)
-    const p = BigInt(generatePrime(1000, 1500)); // Sænket til 1000-1500
+    const p = BigInt(generatePrime(100, 1000)); // Tilbage til gammelt interval
     let q;
     do {
-        q = BigInt(generatePrime(1000, 1500));
+        q = BigInt(generatePrime(100, 1000));
     } while (q === p); // Sørg for, at p og q er forskellige
 
     // Beregn n og phi(n)
@@ -34,13 +34,14 @@ function generateKeys() {
         e++;
     }
     if (e >= phi) {
-        console.error("Kunne ikke finde en passende e-værdi inden for phi. Prøv igen.");
+        console.error("Kunne ikke finde en passende e-værdi inden for phi. Prøv igen.", { p, q, phi });
         return generateKeys(); // Genstart, hvis e ikke findes
     }
 
     // Beregn d (privat eksponent)
     let d = modInverse(e, phi);
 
+    console.log("Genereret nøgler:", { e, n, d }); // Mere debug-log
     return {
         publicKey: { e, n },
         privateKey: { d, n }
@@ -77,11 +78,14 @@ function modInverse(e, phi) {
 // Eksisterende krypterings- og dekrypteringsfunktioner (uændret)
 function encryptMessage(message, publicKey) {
     const msgNum = BigInt(message.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0));
-    return [modPow(msgNum, publicKey.e, publicKey.n)];
+    const encrypted = modPow(msgNum, publicKey.e, publicKey.n);
+    console.log("Krypteret tal:", encrypted); // Debug-log
+    return [encrypted];
 }
 
 function decryptMessage(encrypted, privateKey) {
     const decryptedNum = modPow(encrypted[0], privateKey.d, privateKey.n);
+    console.log("Dekrypteret tal:", decryptedNum); // Debug-log
     return String.fromCharCode(Number(decryptedNum));
 }
 
