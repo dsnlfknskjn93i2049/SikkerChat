@@ -124,12 +124,15 @@ async function decryptAndCompare() {
 
 async function moveMessage(folder) {
     try {
+        if (!currentMessageId) throw new Error("Ingen besked valgt!");
         const { error } = await supabase
             .from("messages")
             .update({ folder: folder })
             .eq("id", currentMessageId);
         if (error) throw new Error(error.message || "Ukendt fejl ved flytning");
+        // Opdater visningen efter flytning
         backToInbox();
+        showFolder(currentFolder); // Genindlæs den aktuelle mappe
     } catch (error) {
         console.error("Fejl ved flytning af besked:", error);
         alert("Fejl ved flytning af besked: " + error.message);
