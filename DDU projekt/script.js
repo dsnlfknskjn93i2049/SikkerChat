@@ -1,23 +1,24 @@
-function sendMessage() {
-    let message = document.getElementById("message").value;
-    alert("Besked sendt: " + message);
-}
 // Globale funktioner
 async function login() {
     let username = document.getElementById("username").value.trim();
     let password = document.getElementById("password").value;
-    const users = await fetchUsers();
-    let user = users.find(u => u.username === username && u.password === password);
-    if (user) {
-        currentUser = username;
-        document.getElementById("loginScreen").style.display = "none";
-        document.getElementById("chatScreen").style.display = "block";
-        document.getElementById("currentUserName").innerText = username;
-        updateRecipientList();
-        updateMessageBox();
-        updateUserSwitcher();
-    } else {
-        document.getElementById("loginOutput").innerText = "Forkert brugernavn eller adgangskode!";
+    try {
+        const users = await fetchUsers();
+        let user = users.find(u => u.username === username && u.password === password);
+        if (user) {
+            currentUser = username;
+            document.getElementById("loginScreen").style.display = "none";
+            document.getElementById("chatScreen").style.display = "block";
+            document.getElementById("currentUserName").innerText = username;
+            updateRecipientList();
+            updateMessageBox();
+            updateUserSwitcher();
+        } else {
+            document.getElementById("loginOutput").innerText = "Forkert brugernavn eller adgangskode!";
+        }
+    } catch (error) {
+        console.error("Fejl ved login:", error);
+        document.getElementById("loginOutput").innerText = "Fejl ved login: " + error.message;
     }
 }
 
@@ -39,30 +40,33 @@ async function addUser() {
         backToLogin();
         return;
     }
-    const users = await fetchUsers();
-    if (users.some(u => u.username === newUser)) {
-        document.getElementById("loginOutput").innerText = "Brugernavn findes allerede!";
-        backToLogin();
-        return;
-    }
     try {
+        const users = await fetchUsers();
+        if (users.some(u => u.username === newUser)) {
+            document.getElementById("loginOutput").innerText = "Brugernavn findes allerede!";
+            backToLogin();
+            return;
+        }
         let userKeys = window.generateKeys();
-        const { error } = await supabase.from("users").insert({
+        const { data, error } = await supabase.from("users").insert({
             username: newUser,
             password: newPassword,
             public_key_e: userKeys.publicKey.e.toString(),
             public_key_n: userKeys.publicKey.n.toString(),
             private_key_d: userKeys.privateKey.d.toString(),
             private_key_n: userKeys.privateKey.n.toString()
-        });
-        if (error) throw error;
+        }).select();
+        if (error) {
+            throw new Error(error.message || "Ukendt fejl ved oprettelse");
+        }
+        console.log("Bruger oprettet:", data);
         document.getElementById("newUser").value = "";
         document.getElementById("newPassword").value = "";
         document.getElementById("loginOutput").innerText = "Oprettelse lykkedes!";
         backToLogin();
     } catch (error) {
         console.error("Fejl ved oprettelse af bruger:", error);
-        document.getElementById("loginOutput").innerText = "Fejl ved oprettelse af bruger!";
+        document.getElementById("loginOutput").innerText = "Fejl ved oprettelse af bruger: " + error.message;
         backToLogin();
     }
 }
@@ -74,6 +78,7 @@ async function sendMessage() {
         if (!message) throw new Error("Ingen besked indtastet!");
         const users = await fetchUsers();
         let recipientUser = users.find(u => u.username === recipient);
+        if (!recipientUser) throw new Error("Modtager ikke fundet!");
         let encrypted = window.encryptMessage(message, recipientUser.keys.publicKey);
         let hash = await generateHash(message);
         const { error } = await supabase.from("messages").insert({
@@ -82,7 +87,7 @@ async function sendMessage() {
             encrypted: encrypted.join(", "),
             hash: hash
         });
-        if (error) throw error;
+        if (error) throw new Error(error.message || "Ukendt fejl ved afsendelse");
         document.getElementById("output").innerText = "Besked sendt til " + recipient + "!";
         document.getElementById("message").value = "";
         updateMessageBox();
@@ -102,6 +107,7 @@ async function decryptMessageHandler() {
         let encryptedText = inputText.split(",").map(num => BigInt(num.trim()));
         const users = await fetchUsers();
         let currentUserData = users.find(u => u.username === currentUser);
+        if (!currentUserData) throw new Error("Bruger ikke fundet!");
         let decrypted = window.decryptMessage(encryptedText, currentUserData.keys.privateKey);
         let hash = await generateHash(decrypted);
         document.getElementById("output").innerText = 
@@ -124,28 +130,32 @@ async function switchUser() {
 }
 
 async function fetchUsers() {
-    const { data, error } = await supabase.from("users").select("*");
-    if (error) {
+    try {
+        const { data, error } = await supabase.from("users").select("*");
+        if (error) throw new Error(error.message || "Ukendt fejl ved hentning af brugere");
+        return data.map(user => ({
+            username: user.username,
+            password: user.password,
+            keys: {
+                publicKey: { e: BigInt(user.public_key_e), n: BigInt(user.public_key_n) },
+                privateKey: { d: BigInt(user.private_key_d), n: BigInt(user.private_key_n) }
+            }
+        }));
+    } catch (error) {
         console.error("Fejl ved hentning af brugere:", error);
         return [];
     }
-    return data.map(user => ({
-        username: user.username,
-        password: user.password,
-        keys: {
-            publicKey: { e: BigInt(user.public_key_e), n: BigInt(user.public_key_n) },
-            privateKey: { d: BigInt(user.private_key_d), n: BigInt(user.private_key_n) }
-        }
-    }));
 }
 
 async function fetchMessages() {
-    const { data, error } = await supabase.from("messages").select("*");
-    if (error) {
+    try {
+        const { data, error } = await supabase.from("messages").select("*");
+        if (error) throw new Error(error.message || "Ukendt fejl ved hentning af beskeder");
+        return data;
+    } catch (error) {
         console.error("Fejl ved hentning af beskeder:", error);
         return [];
     }
-    return data;
 }
 
 async function updateRecipientList() {
@@ -188,11 +198,23 @@ async function updateUserSwitcher() {
     });
 }
 
+async function generateHash(message) {
+    try {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(message);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+        return hashHex;
+    } catch (error) {
+        console.error("Fejl i hash-generering:", error);
+        throw error;
+    }
+}
+
 // Initialiser Supabase
-const SUPABASE_URL = "https://rwrojiienyguarwlrybu.supabase.co"; // Erstat med din URL
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ3cm9qaWllbnlndWFyd2xyeWJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEzNjIzNjksImV4cCI6MjA1NjkzODM2OX0.cHaVzzBj7xwy4JJZSpdR69IwHfiXm_bMQ_lhM91F50s"; // Erstat med din Anon Key
+const SUPABASE_URL = "https://rwrojiienyguarwlrybu.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ3cm9qaWllbnlndWFyd2xyeWJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEzNjIzNjksImV4cCI6MjA1NjkzODM2OX0.cHaVzzBj7xwy4JJZSpdR69IwHfiXm_bMQ_lhM91F50s";
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentUser = null;
-
-// Ingen addEventListener nødvendig nu, da funktionerne er globale
