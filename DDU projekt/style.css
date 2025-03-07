@@ -1,57 +1,65 @@
 body {
     font-family: Arial, sans-serif;
-    text-align: center;
+    margin: 0;
     padding: 20px;
+    background-color: #f4f4f9;
 }
 
-input, select {
+h1, h2 {
+    color: #333;
+}
+
+input, select, button {
     padding: 10px;
-    width: 80%;
-    margin-bottom: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 button {
-    padding: 10px 20px;
-    background-color: blue;
+    background-color: #007bff;
     color: white;
-    border: none;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: darkblue;
+    background-color: #0056b3;
 }
 
-#messageBox {
-    margin-top: 20px;
-    text-align: left;
-    max-width: 90%; /* Øget fra 80% til 90% */
-    min-height: 150px; /* Giver mere lodret plads */
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid #ccc;
-    padding: 15px; /* Øget padding for bedre læsbarhed */
-    word-wrap: break-word; /* Sørger for, at lange tekster brydes */
-    overflow-y: auto; /* Tilføjer scrollbar, hvis der er meget tekst */
-}
-
-h1, h2 {
-    margin-top: 20px;
-}
-
-#loginScreen, #createUserScreen, #chatScreen {
-    max-width: 400px;
+#loginScreen, #createUserScreen, #chatScreen, #messageView {
+    max-width: 600px;
     margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-#userSwitcher {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    text-align: right;
+#folderTabs {
+    margin-bottom: 10px;
 }
 
-#userSwitcher select {
-    width: auto;
-    padding: 5px;
+#folderTabs button {
+    margin-right: 10px;
+}
+
+#inboxList {
+    border: 1px solid #ddd;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.messageItem {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.messageItem:hover {
+    background-color: #f0f0f0;
+}
+
+#messageView p {
+    margin: 10px 0;
 }
