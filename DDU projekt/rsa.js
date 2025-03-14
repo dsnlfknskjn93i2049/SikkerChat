@@ -1,4 +1,23 @@
-// Funktion til at finde den største fælles divisor (sfd)
+// Funktion til at tjekke om et tal er et primtal
+function isPrime(n) {
+    if (n < 2) return false;
+    for (let i = 2; i <= Math.sqrt(n); i++) {
+        if (n % i === 0) return false;
+    }
+    return true;
+}
+
+// Funktion til at generere et tilfældigt primtal i et interval
+function generateRandomPrime(min, max) {
+    let num = Math.floor(Math.random() * (max - min + 1)) + min;
+    while (!isPrime(num)) {
+        num++;
+        if (num > max) num = min; // Start forfra, hvis vi overskrider max
+    }
+    return BigInt(num);
+}
+
+// Funktion til at finde største fælles divisor (sfd)
 window.gcd = function(a, b) {
     while (b !== 0n) {
         [a, b] = [b, a % b];
@@ -9,11 +28,11 @@ window.gcd = function(a, b) {
 // Funktion til at finde den modulære inverse (d)
 window.modInverse = function(e, phi) {
     let m0 = phi, t, q;
-    let x0 = 0, x1 = 1;
-    if (phi === 1) return 0;
+    let x0 = 0n, x1 = 1n;
+    if (phi === 1n) return 0n;
 
-    while (e > 1) {
-        q = Math.floor(e / phi);
+    while (e > 1n) {
+        q = e / phi;
         t = phi;
         phi = e % phi, e = t;
         t = x0;
@@ -21,12 +40,17 @@ window.modInverse = function(e, phi) {
         x1 = t;
     }
 
-    return x1 < 0 ? x1 + m0 : x1;
+    return x1 < 0n ? x1 + m0 : x1;
 };
 
-// Generering af nøgler for en bruger
+// Generering af unikke nøgler for en bruger
 window.generateKeys = function() {
-    let p = 97n, q = 113n; // Disse kunne randomiseres senere for mere sikkerhed
+    let p = generateRandomPrime(50, 200); // Juster interval efter behov
+    let q = generateRandomPrime(50, 200);
+    while (p === q) {
+        q = generateRandomPrime(50, 200); // Sørg for forskellige primtal
+    }
+
     let n = p * q;
     let phi = (p - 1n) * (q - 1n);
 
@@ -35,7 +59,7 @@ window.generateKeys = function() {
         e += 2n;
     }
 
-    let d = BigInt(window.modInverse(Number(e), Number(phi)));
+    let d = window.modInverse(e, phi);
 
     return { publicKey: { e, n }, privateKey: { d, n } };
 };
@@ -48,7 +72,7 @@ window.encryptMessage = function(message, publicKey) {
         let encryptedChar = (ascii ** publicKey.e) % publicKey.n;
         encrypted.push(encryptedChar);
     }
-    return encrypted;
+    return encrypted; // Returnerer array af BigInt
 };
 
 // RSA Dekryptering med brugerens private nøgle
