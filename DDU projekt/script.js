@@ -84,7 +84,7 @@ async function sendMessage() {
         const { error } = await supabase.from("messages").insert({
             sender: currentUser,
             recipient: recipient,
-            encrypted: encrypted.join(", "),
+            encrypted: encrypted.map(num => num.toString()), // Gem som array af strenge
             hash: hash,
             folder: "inbox"
         });
@@ -104,11 +104,11 @@ async function decryptAndCompare() {
         const messages = await fetchMessages();
         const message = messages.find(msg => msg.id === currentMessageId);
         if (!message) throw new Error("Besked ikke fundet!");
-        let encryptedText = message.encrypted.split(",").map(num => BigInt(num.trim()));
+        let encryptedArray = message.encrypted.map(num => BigInt(num)); // Konverter til BigInt
         const users = await fetchUsers();
         let currentUserData = users.find(u => u.username === currentUser);
         if (!currentUserData) throw new Error("Bruger ikke fundet!");
-        let decrypted = window.decryptMessage(encryptedText, currentUserData.keys.privateKey);
+        let decrypted = window.decryptMessage(encryptedArray, currentUserData.keys.privateKey);
         let newHash = await generateHash(decrypted);
         let originalHash = message.hash;
         document.getElementById("decryptedOutput").innerText = "Dekrypteret besked: " + decrypted;
@@ -129,14 +129,13 @@ async function moveMessage(folder) {
             .from("messages")
             .update({ folder: folder })
             .eq("id", currentMessageId)
-            .select(); // Tilføj select for at få den opdaterede række
+            .select();
         if (error) throw new Error(error.message || "Ukendt fejl ved flytning");
         if (data && data.length > 0) {
             console.log("Besked flyttet til:", folder, data[0]);
         }
-        // Opdater visningen korrekt ved at genindlæse den aktuelle mappe
         backToInbox();
-        await showFolder(currentFolder); // Vent på, at folderen genindlæses
+        await showFolder(currentFolder);
     } catch (error) {
         console.error("Fejl ved flytning af besked:", error);
         alert("Fejl ved flytning af besked: " + error.message);
@@ -226,7 +225,7 @@ function openMessage(message) {
     document.getElementById("chatScreen").style.display = "none";
     document.getElementById("messageView").style.display = "block";
     document.getElementById("messageSender").innerText = message.sender;
-    document.getElementById("encryptedMessage").innerText = message.encrypted;
+    document.getElementById("encryptedMessage").innerText = message.encrypted.join(", ");
     document.getElementById("originalHash").innerText = message.hash;
     document.getElementById("decryptedOutput").innerText = "";
     document.getElementById("hashComparison").innerText = "";
