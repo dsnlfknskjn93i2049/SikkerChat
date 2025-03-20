@@ -3,74 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sikker Chat</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>SikkerChat</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="loginScreen">
-        <h1>Log ind</h1>
+    <!-- Forsiden -->
+    <div id="welcomeScreen">
+        <div class="logo-container">
+            <img src="logo.png" alt="SikkerChat Logo" id="logo">
+        </div>
+        <h1>Velkommen til SikkerChat</h1>
+        <p class="motto">Din sikre beskedtjeneste – krypteret og privat</p>
+        <div class="button-container">
+            <button onclick="showLogin()">Login</button>
+            <button onclick="showCreateUser()">Opret Bruger</button>
+        </div>
+    </div>
+
+    <!-- Eksisterende skærme (uændrede) -->
+    <div id="loginScreen" style="display: none;">
+        <h2>Login</h2>
         <input type="text" id="username" placeholder="Brugernavn">
         <input type="password" id="password" placeholder="Adgangskode">
-        <button onclick="login()">Log ind</button>
-        <button onclick="showCreateUser()">Opret bruger</button>
+        <button onclick="login()">Login</button>
         <p id="loginOutput"></p>
+        <button onclick="showCreateUser()">Opret Bruger</button>
     </div>
 
     <div id="createUserScreen" style="display: none;">
-        <h1>Opret bruger</h1>
-        <input type="text" id="newUser" placeholder="Indtast brugernavn...">
-        <input type="password" id="newPassword" placeholder="Indtast adgangskode...">
+        <h2>Opret Bruger</h2>
+        <input type="text" id="newUser" placeholder="Nyt Brugernavn">
+        <input type="password" id="newPassword" placeholder="Ny Adgangskode">
         <button onclick="addUser()">Opret</button>
+        <p id="loginOutput"></p>
         <button onclick="backToLogin()">Tilbage</button>
     </div>
 
     <div id="chatScreen" style="display: none;">
-        <div id="userSwitcher">
-            <label for="switchUser">Skift bruger:</label>
-            <select id="switchUser" onchange="switchUser()">
-                <!-- Brugere tilføjes dynamisk -->
-            </select>
-        </div>
-        <h1>Velkommen til Sikker Chat, <span id="currentUserName"></span>!</h1>
-
-        <!-- Send besked sektion -->
-        <h2>Send en besked</h2>
-        <label for="recipient">Vælg modtager:</label>
+        <h2>Chat som <span id="currentUserName"></span></h2>
+        <select id="switchUser" onchange="switchUser()"></select>
+        <h3>Send Besked</h3>
         <select id="recipient"></select>
-        <br><br>
-        <input type="text" id="message" placeholder="Skriv en besked...">
-        <button onclick="sendMessage()">Kryptér og Send</button>
+        <textarea id="message" placeholder="Skriv din besked her"></textarea>
+        <button onclick="sendMessage()">Send</button>
         <p id="output"></p>
-
-        <!-- Indbakke og mapper -->
-        <h2>Dine beskeder</h2>
+        <h3>Dine Beskeder</h3>
         <div id="folderTabs">
             <button onclick="showFolder('inbox')">Indbakke</button>
-            <button onclick="showFolder('gemt')">Gemt</button>
+            <button onclick="showFolder('saved')">Gemt</button>
             <button onclick="showFolder('slettet')">Slettet</button>
         </div>
-        <div id="inboxList">
-            <!-- Beskedliste vises her -->
-        </div>
+        <div id="inboxList"></div>
     </div>
 
-    <!-- Beskedvisning -->
     <div id="messageView" style="display: none;">
-        <h2>Besked fra <span id="messageSender"></span></h2>
-        <p><strong>Krypteret besked:</strong> <span id="encryptedMessage"></span></p>
-        <p><strong>Oprindelig hash:</strong> <span id="originalHash"></span></p>
+        <h3>Besked fra <span id="messageSender"></span></h3>
+        <p>Krypteret besked: <span id="encryptedMessage"></span></p>
+        <p>Oprindelig hash: <span id="originalHash"></span></p>
         <button onclick="decryptAndCompare()">Dekrypter og Sammenlign Hash</button>
         <p id="decryptedOutput"></p>
         <p id="hashComparison"></p>
-        <button onclick="moveMessage('gemt')">Gem</button>
+        <button onclick="moveMessage('saved')">Gem</button>
         <button onclick="moveMessage('slettet')">Slet</button>
-        <button onclick="backToInbox()">Tilbage til Indbakke</button>
+        <button onclick="backToInbox()">Tilbage</button>
     </div>
-
-    <script src="rsa.js"></script>
-    <script src="script.js"></script>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
 </body>
 </html>
