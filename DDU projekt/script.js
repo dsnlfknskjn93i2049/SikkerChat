@@ -240,12 +240,16 @@ async function createFolder() {
             return;
         }
         folders.push(newFolder);
+        console.log("Forsøger at opdatere folders til:", folders);
         const { data, error } = await supabase
             .from("users")
             .update({ folders: folders })
             .eq("username", currentUser)
-            .select(); // Henter den opdaterede bruger
+            .select();
         if (error) throw new Error(error.message || "Ukendt fejl ved oprettelse af mappe");
+        if (!data || data.length === 0) {
+            throw new Error("Ingen rækker blev opdateret. Tjek RLS-policy eller brugertilladelser.");
+        }
         console.log("Opdateret bruger i Supabase:", data);
         document.getElementById("newFolderName").value = "";
         alert(`Mappen "${folderName}" blev oprettet!`);
@@ -263,8 +267,7 @@ async function updateFolderList() {
     const users = await fetchUsers();
     let user = users.find(u => u.username === currentUser);
     let folders = user.folders || DEFAULT_FOLDERS;
-    console.log("Hentede mapper fra Supabase:", folders); // Debugging
-    // Sørg for, at standardmapper altid er til stede
+    console.log("Hentede mapper fra Supabase:", folders);
     DEFAULT_FOLDERS.forEach(defaultFolder => {
         if (!folders.includes(defaultFolder)) {
             folders.push(defaultFolder);
@@ -287,7 +290,7 @@ async function updateMoveToFolderList() {
     let user = users.find(u => u.username === currentUser);
     let folders = user.folders || DEFAULT_FOLDERS;
     folders.forEach(folder => {
-        if (folder !== currentFolder) { // Udeluk den aktuelle mappe
+        if (folder !== currentFolder) {
             let option = document.createElement("option");
             option.value = folder;
             option.text = folder.charAt(0).toUpperCase() + folder.slice(1);
@@ -460,7 +463,7 @@ function openMessage(message) {
     document.getElementById("originalHash").innerText = message.hash;
     document.getElementById("decryptedOutput").innerText = "";
     document.getElementById("hashComparison").innerText = "";
-    updateMoveToFolderList(); // Opdater dropdown med tilgængelige mapper
+    updateMoveToFolderList();
 }
 
 async function updateUserSwitcher() {
