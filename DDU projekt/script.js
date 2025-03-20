@@ -4,6 +4,10 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentUser = null;
+let currentFolder = "inbox";
+
+// Standardmapper, som altid skal være til stede
+const DEFAULT_FOLDERS = ["inbox", "saved", "slettet"];
 
 // RSA-funktioner
 function isPrime(n) {
@@ -126,6 +130,13 @@ function backToLogin() {
     document.getElementById("welcomeScreen").style.display = "none";
 }
 
+function logout() {
+    currentUser = null;
+    currentFolder = "inbox";
+    document.getElementById("chatScreen").style.display = "none";
+    document.getElementById("welcomeScreen").style.display = "flex";
+}
+
 async function login() {
     let username = document.getElementById("username").value.trim();
     let password = document.getElementById("password").value;
@@ -135,9 +146,10 @@ async function login() {
         if (user) {
             currentUser = username;
             document.getElementById("loginScreen").style.display = "none";
-            document.getElementById("chatScreen").style.display = "block";
+            document.getElementById("chatScreen").style.display = "flex";
             document.getElementById("currentUserName").innerText = username;
             updateRecipientList();
+            updateFolderList();
             showFolder("inbox");
             updateUserSwitcher();
         } else {
@@ -171,7 +183,8 @@ async function addUser() {
             public_key_e: userKeys.publicKey.e.toString(),
             public_key_n: userKeys.publicKey.n.toString(),
             private_key_d: userKeys.privateKey.d.toString(),
-            private_key_n: userKeys.privateKey.n.toString()
+            private_key_n: userKeys.privateKey.n.toString(),
+            folders: DEFAULT_FOLDERS // Standardmapper
         }).select();
         if (error) {
             throw new Error(error.message || "Ukendt fejl ved oprettelse");
@@ -186,6 +199,82 @@ async function addUser() {
         document.getElementById("loginOutput").innerText = "Fejl ved oprettelse af bruger: " + error.message;
         backToLogin();
     }
+}
+
+function showCompose() {
+    document.getElementById("chatScreen").style.display = "none";
+    document.getElementById("composeScreen").style.display = "block";
+}
+
+function backToChat() {
+    document.getElementById("composeScreen").style.display = "none";
+    document.getElementById("createFolderScreen").style.display = "none";
+    document.getElementById("chatScreen").style.display = "flex";
+    showFolder(currentFolder);
+}
+
+function showCreateFolder() {
+    document.getElementById("chatScreen").style.display = "none";
+    document.getElementById("createFolderScreen").style.display = "block";
+}
+
+async function createFolder() {
+    let folderName = document.getElementById("newFolderName").value.trim();
+    if (!folderName) {
+        alert("Indtast et mappenavn!");
+        return;
+    }
+    // Valider mappenavn (ingen specialtegn, kun bogstaver og tal)
+    if (!/^[a-zA-Z0-9]+$/.test(folderName)) {
+        alert("Mappenavnet må kun indeholde bogstaver og tal!");
+        return;
+    }
+    try {
+        const users = await fetchUsers();
+        let user = users.find(u => u.username === currentUser);
+        if (!user) throw new Error("Bruger ikke fundet!");
+        let folders = user.folders || DEFAULT_FOLDERS;
+        let newFolder = folderName.toLowerCase();
+        if (folders.includes(newFolder)) {
+            alert("Mappen findes allerede!");
+            return;
+        }
+        folders.push(newFolder);
+        const { error } = await supabase
+            .from("users")
+            .update({ folders: folders })
+            .eq("username", currentUser);
+        if (error) throw new Error(error.message || "Ukendt fejl ved oprettelse af mappe");
+        document.getElementById("newFolderName").value = "";
+        alert(`Mappen "${folderName}" blev oprettet!`);
+        backToChat();
+        updateFolderList();
+    } catch (error) {
+        console.error("Fejl ved oprettelse af mappe:", error);
+        alert("Fejl ved oprettelse af mappe: " + error.message);
+    }
+}
+
+async function updateFolderList() {
+    let folderList = document.getElementById("folderList");
+    folderList.innerHTML = "";
+    const users = await fetchUsers();
+    let user = users.find(u => u.username === currentUser);
+    let folders = user.folders || DEFAULT_FOLDERS;
+    // Sørg for, at standardmapper altid er til stede
+    DEFAULT_FOLDERS.forEach(defaultFolder => {
+        if (!folders.includes(defaultFolder)) {
+            folders.push(defaultFolder);
+        }
+    });
+    folders.forEach(folder => {
+        let folderItem = document.createElement("div");
+        folderItem.className = "folder-item";
+        if (folder === currentFolder) folderItem.classList.add("active");
+        folderItem.innerText = folder.charAt(0).toUpperCase() + folder.slice(1);
+        folderItem.onclick = () => showFolder(folder);
+        folderList.appendChild(folderItem);
+    });
 }
 
 async function sendMessage() {
@@ -203,11 +292,12 @@ async function sendMessage() {
             recipient: recipient,
             encrypted: encrypted.map(num => num.toString()),
             hash: hash,
-            folder: "inbox"
+            folder: "inbox" // Bruger "folder"-kolonnen
         });
         if (error) throw new Error(error.message || "Ukendt fejl ved afsendelse");
         document.getElementById("output").innerText = "Besked sendt til " + recipient + "!";
         document.getElementById("message").value = "";
+        backToChat();
     } catch (error) {
         console.error("Fejl ved kryptering:", error);
         document.getElementById("output").innerText = "Fejl ved kryptering: " + error.message;
@@ -244,12 +334,13 @@ async function moveMessage(folder) {
         if (!currentMessageId) throw new Error("Ingen besked valgt!");
         const { data, error } = await supabase
             .from("messages")
-            .update({ folder: folder })
+            .update({ folder: folder }) // Bruger "folder"-kolonnen
             .eq("id", currentMessageId)
             .select();
         if (error) throw new Error(error.message || "Ukendt fejl ved flytning");
         if (data && data.length > 0) {
             console.log("Besked flyttet til:", folder, data[0]);
+            alert(`Beskeden blev flyttet til "${folder.charAt(0).toUpperCase() + folder.slice(1)}"!`);
         }
         backToInbox();
         await showFolder(currentFolder);
@@ -261,7 +352,6 @@ async function moveMessage(folder) {
 
 function backToInbox() {
     document.getElementById("messageView").style.display = "none";
-    document.getElementById("chatScreen").style.display = "block";
 }
 
 async function switchUser() {
@@ -269,8 +359,8 @@ async function switchUser() {
     currentUser = selectedUser;
     document.getElementById("currentUserName").innerText = selectedUser;
     updateRecipientList();
+    updateFolderList();
     showFolder("inbox");
-    document.getElementById("output").innerText = "Skiftet til " + selectedUser;
 }
 
 async function fetchUsers() {
@@ -283,7 +373,8 @@ async function fetchUsers() {
             keys: {
                 publicKey: { e: BigInt(user.public_key_e), n: BigInt(user.public_key_n) },
                 privateKey: { d: BigInt(user.private_key_d), n: BigInt(user.private_key_n) }
-            }
+            },
+            folders: user.folders || DEFAULT_FOLDERS
         }));
     } catch (error) {
         console.error("Fejl ved hentning af brugere:", error);
@@ -316,10 +407,10 @@ async function updateRecipientList() {
     });
 }
 
-let currentFolder = "inbox";
-
 async function showFolder(folder) {
     currentFolder = folder;
+    document.getElementById("messageView").style.display = "none";
+    updateFolderList();
     let inboxList = document.getElementById("inboxList");
     inboxList.innerHTML = "";
     const messages = await fetchMessages();
@@ -330,8 +421,12 @@ async function showFolder(folder) {
     }
     filteredMessages.forEach(msg => {
         let messageDiv = document.createElement("div");
-        messageDiv.className = "messageItem";
-        messageDiv.innerHTML = `Fra: ${msg.sender}`;
+        messageDiv.className = "message-item";
+        let preview = msg.encrypted.slice(0, 5).join(", ") + "...";
+        messageDiv.innerHTML = `
+            <div>Fra: ${msg.sender}</div>
+            <div>${preview}</div>
+        `;
         messageDiv.onclick = () => openMessage(msg);
         inboxList.appendChild(messageDiv);
     });
@@ -339,7 +434,6 @@ async function showFolder(folder) {
 
 function openMessage(message) {
     currentMessageId = message.id;
-    document.getElementById("chatScreen").style.display = "none";
     document.getElementById("messageView").style.display = "block";
     document.getElementById("messageSender").innerText = message.sender;
     document.getElementById("encryptedMessage").innerText = message.encrypted.join(", ");
