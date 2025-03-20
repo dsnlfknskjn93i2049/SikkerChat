@@ -13,7 +13,7 @@
         <div class="logo-container">
             <img src="logo.png" alt="SikkerChat Logo" id="logo">
         </div>
-        <h1>Velkommen til SikkerChat</h1>
+        <h1>Velkommen til Sikker Chat</h1>
         <p class="motto">Din sikre beskedtjeneste – krypteret og privat</p>
         <div class="button-container">
             <button onclick="showLogin()">Login</button>
@@ -21,14 +21,14 @@
         </div>
     </div>
 
-    <div id="loginScreen" style="display: none;">
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Brugernavn">
-        <input type="password" id="password" placeholder="Adgangskode">
-        <button onclick="login()">Login</button>
-        <p id="loginOutput"></p>
-        <button onclick="showCreateUser()">Opret Bruger</button>
-    </div>
+   <div id="loginScreen" style="display: none;">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Brugernavn">
+    <input type="password" id="password" placeholder="Adgangskode">
+    <button onclick="login()">Login</button>
+    <p id="loginOutput"></p>
+    <button onclick="showWelcomeScreen()">Tilbage</button> <!-- Ændret til at gå tilbage til forsiden -->
+</div>
 
     <div id="createUserScreen" style="display: none;">
         <h2>Opret Bruger</h2>
