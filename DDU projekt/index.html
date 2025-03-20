@@ -63,8 +63,11 @@
                 <button onclick="decryptAndCompare()">Dekrypter og Sammenlign Hash</button>
                 <p id="decryptedOutput"></p>
                 <p id="hashComparison"></p>
-                <button onclick="moveMessage('saved')">Gem</button>
-                <button onclick="moveMessage('slettet')">Slet</button>
+                <div>
+                    <label for="moveToFolder">Flyt til mappe:</label>
+                    <select id="moveToFolder"></select>
+                    <button onclick="moveMessage(document.getElementById('moveToFolder').value)">Flyt</button>
+                </div>
                 <button onclick="backToInbox()">Tilbage</button>
             </div>
         </div>
