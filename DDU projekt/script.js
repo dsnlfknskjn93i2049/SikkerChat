@@ -5,7 +5,7 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentUser = null;
 
-// RSA-funktioner (flyttet til toppen)
+// RSA-funktioner
 function isPrime(n) {
     if (n < 2) return false;
     for (let i = 2; i <= Math.sqrt(n); i++) {
@@ -103,6 +103,12 @@ window.decryptMessage = function(encrypted, privateKey) {
 // Debug: Tjek, om funktionerne er defineret
 console.log("Er window.encryptMessage defineret?", typeof window.encryptMessage);
 console.log("Er window.decryptMessage defineret?", typeof window.decryptMessage);
+
+function showWelcomeScreen() {
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("createUserScreen").style.display = "none";
+    document.getElementById("welcomeScreen").style.display = "flex";
+}
 
 function showLogin() {
     document.getElementById("welcomeScreen").style.display = "none";
@@ -370,3 +376,26 @@ async function generateHash(message) {
         throw error;
     }
 }
+
+// Lyt efter "Enter" på login-skærmen
+document.getElementById("username").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        login();
+    }
+});
+
+document.getElementById("password").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        login();
+    }
+});
+
+// Lyt efter "Enter" i beskedfeltet
+document.getElementById("message").addEventListener("keypress", function(event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+    }
+});
