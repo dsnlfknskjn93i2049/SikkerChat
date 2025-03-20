@@ -184,7 +184,7 @@ async function addUser() {
             public_key_n: userKeys.publicKey.n.toString(),
             private_key_d: userKeys.privateKey.d.toString(),
             private_key_n: userKeys.privateKey.n.toString(),
-            folders: DEFAULT_FOLDERS // Bruger "folders" (med "s")
+            folders: DEFAULT_FOLDERS
         }).select();
         if (error) {
             throw new Error(error.message || "Ukendt fejl ved oprettelse");
@@ -240,11 +240,13 @@ async function createFolder() {
             return;
         }
         folders.push(newFolder);
-        const { error } = await supabase
+        const { data, error } = await supabase
             .from("users")
-            .update({ folders: folders }) // Bruger "folders" (med "s")
-            .eq("username", currentUser);
+            .update({ folders: folders })
+            .eq("username", currentUser)
+            .select(); // Henter den opdaterede bruger
         if (error) throw new Error(error.message || "Ukendt fejl ved oprettelse af mappe");
+        console.log("Opdateret bruger i Supabase:", data);
         document.getElementById("newFolderName").value = "";
         alert(`Mappen "${folderName}" blev oprettet!`);
         backToChat();
@@ -261,6 +263,7 @@ async function updateFolderList() {
     const users = await fetchUsers();
     let user = users.find(u => u.username === currentUser);
     let folders = user.folders || DEFAULT_FOLDERS;
+    console.log("Hentede mapper fra Supabase:", folders); // Debugging
     // Sørg for, at standardmapper altid er til stede
     DEFAULT_FOLDERS.forEach(defaultFolder => {
         if (!folders.includes(defaultFolder)) {
@@ -274,6 +277,22 @@ async function updateFolderList() {
         folderItem.innerText = folder.charAt(0).toUpperCase() + folder.slice(1);
         folderItem.onclick = () => showFolder(folder);
         folderList.appendChild(folderItem);
+    });
+}
+
+async function updateMoveToFolderList() {
+    let moveToFolderSelect = document.getElementById("moveToFolder");
+    moveToFolderSelect.innerHTML = "";
+    const users = await fetchUsers();
+    let user = users.find(u => u.username === currentUser);
+    let folders = user.folders || DEFAULT_FOLDERS;
+    folders.forEach(folder => {
+        if (folder !== currentFolder) { // Udeluk den aktuelle mappe
+            let option = document.createElement("option");
+            option.value = folder;
+            option.text = folder.charAt(0).toUpperCase() + folder.slice(1);
+            moveToFolderSelect.appendChild(option);
+        }
     });
 }
 
@@ -292,7 +311,7 @@ async function sendMessage() {
             recipient: recipient,
             encrypted: encrypted.map(num => num.toString()),
             hash: hash,
-            folder: "inbox" // Bruger "folder" (uden "s") i messages-tabellen
+            folder: "inbox"
         });
         if (error) throw new Error(error.message || "Ukendt fejl ved afsendelse");
         document.getElementById("output").innerText = "Besked sendt til " + recipient + "!";
@@ -332,9 +351,10 @@ async function decryptAndCompare() {
 async function moveMessage(folder) {
     try {
         if (!currentMessageId) throw new Error("Ingen besked valgt!");
+        if (!folder) throw new Error("Vælg en mappe at flytte til!");
         const { data, error } = await supabase
             .from("messages")
-            .update({ folder: folder }) // Bruger "folder" (uden "s") i messages-tabellen
+            .update({ folder: folder })
             .eq("id", currentMessageId)
             .select();
         if (error) throw new Error(error.message || "Ukendt fejl ved flytning");
@@ -374,7 +394,7 @@ async function fetchUsers() {
                 publicKey: { e: BigInt(user.public_key_e), n: BigInt(user.public_key_n) },
                 privateKey: { d: BigInt(user.private_key_d), n: BigInt(user.private_key_n) }
             },
-            folders: user.folders || DEFAULT_FOLDERS // Bruger "folders" (med "s")
+            folders: user.folders || DEFAULT_FOLDERS
         }));
     } catch (error) {
         console.error("Fejl ved hentning af brugere:", error);
@@ -440,6 +460,7 @@ function openMessage(message) {
     document.getElementById("originalHash").innerText = message.hash;
     document.getElementById("decryptedOutput").innerText = "";
     document.getElementById("hashComparison").innerText = "";
+    updateMoveToFolderList(); // Opdater dropdown med tilgængelige mapper
 }
 
 async function updateUserSwitcher() {
