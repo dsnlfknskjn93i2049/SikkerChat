@@ -495,25 +495,37 @@ async function generateHash(message) {
     }
 }
 
-// Lyt efter "Enter" på login-skærmen
-document.getElementById("username").addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        login();
-    }
-});
+// Bind event listeners, når DOM'en er fuldt indlæst
+window.onload = function() {
+    // Lyt efter "Enter" på login-skærmen
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+    const messageInput = document.getElementById("message");
 
-document.getElementById("password").addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        login();
+    if (usernameInput) {
+        usernameInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                login();
+            }
+        });
     }
-});
 
-// Lyt efter "Enter" i beskedfeltet
-document.getElementById("message").addEventListener("keypress", function(event) {
-    if (event.key === "Enter" && !event.shiftKey) {
-        event.preventDefault();
-        sendMessage();
+    if (passwordInput) {
+        passwordInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                login();
+            }
+        });
     }
-});
+
+    if (messageInput) {
+        messageInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+    }
+};
