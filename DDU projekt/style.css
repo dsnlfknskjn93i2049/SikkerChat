@@ -3,15 +3,16 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: Arial, sans-serif; /* Moderne skrifttype */
 }
 
-body {
-    min-height: 100vh; /* Sørger for, at siden fylder hele skærmens højde */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #e0f7fa, #80deea); /* Blød gradient baggrund */
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background: linear-gradient(135deg, #e0f7fa, #80deea); /* Turkis gradient */
 }
 
 #welcomeScreen {
@@ -31,15 +32,15 @@ body {
 }
 
 #logo {
-    width: 150px; /* Juster størrelsen efter dit logo */
+    width: 150px;
     height: auto;
 }
 
 h1 {
-    font-size: 4rem; /* Stor overskrift */
+    font-size: 4rem;
     margin-bottom: 10px;
-    color: #00695c; /* Mørk turkis farve */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Let skygge for dybde */
+    color: #00695c; /* Mørk turkis */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .motto {
@@ -52,7 +53,7 @@ h1 {
 .button-container {
     position: absolute;
     top: 20px;
-    right: 20px; /* Knapper i højre hjørne */
+    right: 20px;
     display: flex;
     gap: 10px;
 }
@@ -69,39 +70,74 @@ h1 {
 }
 
 .button-container button:hover {
-    background-color: #004d40; /* Mørkere ved hover */
+    background-color: #004d40;
 }
 
-/* Eksisterende skærme (kan styles yderligere senere) */
-#loginScreen, #createUserScreen, #chatScreen, #messageView {
+/* Chat-skærm */
+#chatScreen {
     padding: 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: 20px auto;
-    text-align: center;
+    width: 100%;
+    min-height: 100vh; /* Fyld hele skærmen */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(135deg, #e0f7fa, #80deea); /* Samme gradient som forsiden */
 }
 
-input, textarea, select, button {
-    margin: 10px 0;
+#chatScreen h2, #chatScreen h3 {
+    color: #00695c;
+    margin-bottom: 15px;
+}
+
+#switchUser, #recipient {
     padding: 8px;
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 100%;
     max-width: 300px;
+    margin-bottom: 10px;
 }
 
-button {
+#message {
+    width: 100%;
+    max-width: 500px;
+    height: 100px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+#chatScreen button {
+    padding: 10px 20px;
+    font-size: 1rem;
     background-color: #00695c;
     color: white;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-button:hover {
+#chatScreen button:hover {
     background-color: #004d40;
+}
+
+#folderTabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#inboxList {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
 }
 
 #inboxList .messageItem {
@@ -112,4 +148,46 @@ button:hover {
 
 #inboxList .messageItem:hover {
     background-color: #f5f5f5;
+}
+
+/* Login og Opret Bruger skærme */
+#loginScreen, #createUserScreen {
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+#loginScreen h2, #createUserScreen h2 {
+    color: #00695c;
+    margin-bottom: 15px;
+}
+
+input {
+    margin: 10px 0;
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 300px;
+}
+
+/* Beskedvisning */
+#messageView {
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+#messageView h3 {
+    color: #00695c;
+    margin-bottom: 15px;
 }
