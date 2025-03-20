@@ -21,14 +21,14 @@
         </div>
     </div>
 
-   <div id="loginScreen" style="display: none;">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Brugernavn">
-    <input type="password" id="password" placeholder="Adgangskode">
-    <button onclick="login()">Login</button>
-    <p id="loginOutput"></p>
-    <button onclick="showWelcomeScreen()">Tilbage</button> <!-- Ændret til at gå tilbage til forsiden -->
-</div>
+    <div id="loginScreen" style="display: none;">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Brugernavn">
+        <input type="password" id="password" placeholder="Adgangskode">
+        <button onclick="login()">Login</button>
+        <p id="loginOutput"></p>
+        <button onclick="showWelcomeScreen()">Tilbage</button>
+    </div>
 
     <div id="createUserScreen" style="display: none;">
         <h2>Opret Bruger</h2>
@@ -40,32 +40,50 @@
     </div>
 
     <div id="chatScreen" style="display: none;">
-        <h2>Chat som <span id="currentUserName"></span></h2>
-        <select id="switchUser" onchange="switchUser()"></select>
-        <h3>Send Besked</h3>
+        <div class="chat-header">
+            <h2>Chat som <span id="currentUserName"></span></h2>
+            <select id="switchUser" onchange="switchUser()"></select>
+            <button onclick="logout()" class="logout-btn">Log ud</button>
+        </div>
+        <div class="chat-container">
+            <div class="sidebar">
+                <button onclick="showCompose()" class="compose-btn">Skriv</button>
+                <div id="folderList">
+                    <!-- Mapper tilføjes dynamisk via JavaScript -->
+                </div>
+                <button onclick="showCreateFolder()" class="create-folder-btn">Ny mappe</button>
+            </div>
+            <div class="message-list">
+                <div id="inboxList"></div>
+            </div>
+            <div id="messageView" class="message-view" style="display: none;">
+                <h3>Besked fra <span id="messageSender"></span></h3>
+                <p>Krypteret besked: <span id="encryptedMessage"></span></p>
+                <p>Oprindelig hash: <span id="originalHash"></span></p>
+                <button onclick="decryptAndCompare()">Dekrypter og Sammenlign Hash</button>
+                <p id="decryptedOutput"></p>
+                <p id="hashComparison"></p>
+                <button onclick="moveMessage('saved')">Gem</button>
+                <button onclick="moveMessage('slettet')">Slet</button>
+                <button onclick="backToInbox()">Tilbage</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="composeScreen" style="display: none;">
+        <h3>Skriv ny besked</h3>
         <select id="recipient"></select>
         <textarea id="message" placeholder="Skriv din besked her"></textarea>
         <button onclick="sendMessage()">Send</button>
+        <button onclick="backToChat()">Annuller</button>
         <p id="output"></p>
-        <h3>Dine Beskeder</h3>
-        <div id="folderTabs">
-            <button onclick="showFolder('inbox')">Indbakke</button>
-            <button onclick="showFolder('saved')">Gemt</button>
-            <button onclick="showFolder('slettet')">Slettet</button>
-        </div>
-        <div id="inboxList"></div>
     </div>
 
-    <div id="messageView" style="display: none;">
-        <h3>Besked fra <span id="messageSender"></span></h3>
-        <p>Krypteret besked: <span id="encryptedMessage"></span></p>
-        <p>Oprindelig hash: <span id="originalHash"></span></p>
-        <button onclick="decryptAndCompare()">Dekrypter og Sammenlign Hash</button>
-        <p id="decryptedOutput"></p>
-        <p id="hashComparison"></p>
-        <button onclick="moveMessage('saved')">Gem</button>
-        <button onclick="moveMessage('slettet')">Slet</button>
-        <button onclick="backToInbox()">Tilbage</button>
+    <div id="createFolderScreen" style="display: none;">
+        <h3>Opret ny mappe</h3>
+        <input type="text" id="newFolderName" placeholder="Mappenavn">
+        <button onclick="createFolder()">Opret</button>
+        <button onclick="backToChat()">Annuller</button>
     </div>
 </body>
 </html>
