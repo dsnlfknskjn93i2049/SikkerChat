@@ -1,5 +1,109 @@
-// Globale funktioner
-// Tilføj disse funktioner øverst i script.js, før login()
+// script.js
+const SUPABASE_URL = "https://rwrojiienyguarwlrybu.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ3cm9qaWllbnlndWFyd2xyeWJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEzNjIzNjksImV4cCI6MjA1NjkzODM2OX0.cHaVzzBj7xwy4JJZSpdR69IwHfiXm_bMQ_lhM91F50s";
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+
+// RSA-funktioner (flyttet til toppen)
+function isPrime(n) {
+    if (n < 2) return false;
+    for (let i = 2; i <= Math.sqrt(n); i++) {
+        if (n % i === 0) return false;
+    }
+    return true;
+}
+
+function generateRandomPrime(min, max) {
+    let num = Math.floor(Math.random() * (max - min + 1)) + min;
+    while (!isPrime(num)) {
+        num++;
+        if (num > max) num = min;
+    }
+    return BigInt(num);
+}
+
+window.gcd = function(a, b) {
+    while (b !== 0n) {
+        [a, b] = [b, a % b];
+    }
+    return a;
+};
+
+window.modInverse = function(e, phi) {
+    let m0 = phi, t, q;
+    let x0 = 0n, x1 = 1n;
+    if (phi === 1n) return 0n;
+
+    while (e > 1n) {
+        q = e / phi;
+        t = phi;
+        phi = e % phi, e = t;
+        t = x0;
+        x0 = x1 - q * x0;
+        x1 = t;
+    }
+
+    return x1 < 0n ? x1 + m0 : x1;
+};
+
+window.generateKeys = function() {
+    let p = generateRandomPrime(50, 200);
+    let q = generateRandomPrime(50, 200);
+    while (p === q) {
+        q = generateRandomPrime(50, 200);
+    }
+
+    let n = p * q;
+    let phi = (p - 1n) * (q - 1n);
+
+    let e = 3n;
+    while (window.gcd(e, phi) !== 1n) {
+        e += 2n;
+    }
+
+    let d = window.modInverse(e, phi);
+
+    console.log("Genereret nøgler:", { p, q, n, e, d });
+    return { publicKey: { e, n }, privateKey: { d, n } };
+};
+
+window.modPow = function(base, exponent, modulus) {
+    let result = 1n;
+    base = base % modulus;
+    while (exponent > 0n) {
+        if (exponent & 1n) result = (result * base) % modulus;
+        base = (base * base) % modulus;
+        exponent >>= 1n;
+    }
+    return result;
+};
+
+window.encryptMessage = function(message, publicKey) {
+    let encrypted = [];
+    for (let char of message) {
+        let ascii = BigInt(char.charCodeAt(0));
+        let encryptedChar = window.modPow(ascii, publicKey.e, publicKey.n);
+        encrypted.push(encryptedChar);
+        console.log(`Krypterer tegn '${char}' (ASCII: ${ascii}) -> ${encryptedChar}`);
+    }
+    return encrypted;
+};
+
+window.decryptMessage = function(encrypted, privateKey) {
+    let decrypted = "";
+    for (let num of encrypted) {
+        let decryptedChar = window.modPow(num, privateKey.d, privateKey.n);
+        decrypted += String.fromCharCode(Number(decryptedChar));
+        console.log(`Dekrypterer tal ${num} -> ASCII: ${decryptedChar} -> Tegn: '${String.fromCharCode(Number(decryptedChar))}'`);
+    }
+    return decrypted;
+};
+
+// Debug: Tjek, om funktionerne er defineret
+console.log("Er window.encryptMessage defineret?", typeof window.encryptMessage);
+console.log("Er window.decryptMessage defineret?", typeof window.decryptMessage);
+
 function showLogin() {
     document.getElementById("welcomeScreen").style.display = "none";
     document.getElementById("loginScreen").style.display = "block";
@@ -13,10 +117,9 @@ function showCreateUser() {
 function backToLogin() {
     document.getElementById("createUserScreen").style.display = "none";
     document.getElementById("loginScreen").style.display = "block";
-    document.getElementById("welcomeScreen").style.display = "none"; // Sørg for, at forsiden ikke vises
+    document.getElementById("welcomeScreen").style.display = "none";
 }
 
-// [Resten af din script.js-kode forbliver uændret]
 async function login() {
     let username = document.getElementById("username").value.trim();
     let password = document.getElementById("password").value;
@@ -38,16 +141,6 @@ async function login() {
         console.error("Fejl ved login:", error);
         document.getElementById("loginOutput").innerText = "Fejl ved login: " + error.message;
     }
-}
-
-function showCreateUser() {
-    document.getElementById("loginScreen").style.display = "none";
-    document.getElementById("createUserScreen").style.display = "block";
-}
-
-function backToLogin() {
-    document.getElementById("createUserScreen").style.display = "none";
-    document.getElementById("loginScreen").style.display = "block";
 }
 
 async function addUser() {
@@ -102,7 +195,7 @@ async function sendMessage() {
         const { error } = await supabase.from("messages").insert({
             sender: currentUser,
             recipient: recipient,
-            encrypted: encrypted.map(num => num.toString()), // Gem som array af strenge
+            encrypted: encrypted.map(num => num.toString()),
             hash: hash,
             folder: "inbox"
         });
@@ -122,7 +215,7 @@ async function decryptAndCompare() {
         const messages = await fetchMessages();
         const message = messages.find(msg => msg.id === currentMessageId);
         if (!message) throw new Error("Besked ikke fundet!");
-        let encryptedArray = message.encrypted.map(num => BigInt(num)); // Konverter til BigInt
+        let encryptedArray = message.encrypted.map(num => BigInt(num));
         const users = await fetchUsers();
         let currentUserData = users.find(u => u.username === currentUser);
         if (!currentUserData) throw new Error("Bruger ikke fundet!");
@@ -177,7 +270,7 @@ async function switchUser() {
 async function fetchUsers() {
     try {
         const { data, error } = await supabase.from("users").select("*");
-        if (error) throw new Error(error.message || "Ukendt fejl ved hentning af brugere");
+        if (error) throw error;
         return data.map(user => ({
             username: user.username,
             password: user.password,
@@ -195,7 +288,7 @@ async function fetchUsers() {
 async function fetchMessages() {
     try {
         const { data, error } = await supabase.from("messages").select("*");
-        if (error) throw new Error(error.message || "Ukendt fejl ved hentning af beskeder");
+        if (error) throw error;
         return data || [];
     } catch (error) {
         console.error("Fejl ved hentning af beskeder:", error);
@@ -277,10 +370,3 @@ async function generateHash(message) {
         throw error;
     }
 }
-
-// Initialiser Supabase
-const SUPABASE_URL = "https://rwrojiienyguarwlrybu.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ3cm9qaWllbnlndWFyd2xyeWJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEzNjIzNjksImV4cCI6MjA1NjkzODM2OX0.cHaVzzBj7xwy4JJZSpdR69IwHfiXm_bMQ_lhM91F50s";
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-let currentUser = null;
