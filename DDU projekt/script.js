@@ -7,7 +7,7 @@ let currentUser = null;
 let currentFolder = "inbox";
 
 // Standardmapper, som altid skal være til stede
-const DEFAULT_FOLDERS = ["inbox", "saved", "slettet"];
+const DEFAULT_FOLDER = ["inbox", "saved", "slettet"];
 
 // RSA-funktioner
 function isPrime(n) {
@@ -184,7 +184,7 @@ async function addUser() {
             public_key_n: userKeys.publicKey.n.toString(),
             private_key_d: userKeys.privateKey.d.toString(),
             private_key_n: userKeys.privateKey.n.toString(),
-            folders: DEFAULT_FOLDERS // Standardmapper
+            folder: DEFAULT_FOLDER // Standardmapper
         }).select();
         if (error) {
             throw new Error(error.message || "Ukendt fejl ved oprettelse");
@@ -233,16 +233,16 @@ async function createFolder() {
         const users = await fetchUsers();
         let user = users.find(u => u.username === currentUser);
         if (!user) throw new Error("Bruger ikke fundet!");
-        let folders = user.folders || DEFAULT_FOLDERS;
+        let folder = user.folder || DEFAULT_FOLDER;
         let newFolder = folderName.toLowerCase();
-        if (folders.includes(newFolder)) {
+        if (folder.includes(newFolder)) {
             alert("Mappen findes allerede!");
             return;
         }
-        folders.push(newFolder);
+        folder.push(newFolder);
         const { error } = await supabase
             .from("users")
-            .update({ folders: folders })
+            .update({ folder: folder })
             .eq("username", currentUser);
         if (error) throw new Error(error.message || "Ukendt fejl ved oprettelse af mappe");
         document.getElementById("newFolderName").value = "";
@@ -260,14 +260,14 @@ async function updateFolderList() {
     folderList.innerHTML = "";
     const users = await fetchUsers();
     let user = users.find(u => u.username === currentUser);
-    let folders = user.folders || DEFAULT_FOLDERS;
+    let folder = user.folder || DEFAULT_FOLDER;
     // Sørg for, at standardmapper altid er til stede
-    DEFAULT_FOLDERS.forEach(defaultFolder => {
-        if (!folders.includes(defaultFolder)) {
-            folders.push(defaultFolder);
+    DEFAULT_FOLDER.forEach(defaultFolder => {
+        if (!folder.includes(defaultFolder)) {
+            folder.push(defaultFolder);
         }
     });
-    folders.forEach(folder => {
+    folder.forEach(folder => {
         let folderItem = document.createElement("div");
         folderItem.className = "folder-item";
         if (folder === currentFolder) folderItem.classList.add("active");
@@ -374,7 +374,7 @@ async function fetchUsers() {
                 publicKey: { e: BigInt(user.public_key_e), n: BigInt(user.public_key_n) },
                 privateKey: { d: BigInt(user.private_key_d), n: BigInt(user.private_key_n) }
             },
-            folders: user.folders || DEFAULT_FOLDERS
+            folder: user.folder || DEFAULT_FOLDER
         }));
     } catch (error) {
         console.error("Fejl ved hentning af brugere:", error);
