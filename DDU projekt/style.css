@@ -12,7 +12,7 @@ html, body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-    background: linear-gradient(135deg, #e0f7fa, #80deea); /* Turkis gradient */
+    background: linear-gradient(135deg, #e0f7fa, #80deea);
 }
 
 #welcomeScreen {
@@ -39,7 +39,7 @@ html, body {
 h1 {
     font-size: 4rem;
     margin-bottom: 10px;
-    color: #00695c; /* Mørk turkis */
+    color: #00695c;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -74,42 +74,158 @@ h1 {
 }
 
 #chatScreen {
-    padding: 20px;
     width: 100%;
     min-height: 100vh;
+    background: #f9f9f9; /* Lys grå baggrund som Gmail */
     display: flex;
     flex-direction: column;
-    align-items: center;
-    background: linear-gradient(135deg, #e0f7fa, #80deea);
 }
 
-#chatScreen h2, #chatScreen h3 {
+.chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: #00695c;
+    color: white;
+}
+
+.chat-header h2 {
+    font-size: 1.5rem;
+}
+
+.logout-btn {
+    padding: 8px 15px;
+    background-color: #ff4444; /* Rød farve til logud */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #cc0000;
+}
+
+.chat-container {
+    display: flex;
+    flex: 1;
+    min-height: calc(100vh - 60px); /* Trækker headerens højde fra */
+}
+
+.sidebar {
+    width: 200px;
+    background: #e0f7fa; /* Lys turkis til sidebar */
+    padding: 20px;
+    border-right: 1px solid #ccc;
+}
+
+.compose-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #00695c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background-color 0.3s;
+}
+
+.compose-btn:hover {
+    background-color: #004d40;
+}
+
+#folderList {
+    margin-bottom: 20px;
+}
+
+.folder-item {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.folder-item:hover, .folder-item.active {
+    background-color: #80deea;
+}
+
+.create-folder-btn {
+    width: 100%;
+    padding: 8px;
+    background-color: #555;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.create-folder-btn:hover {
+    background-color: #333;
+}
+
+.message-list {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: white;
+}
+
+#inboxList .message-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+}
+
+#inboxList .message-item:hover {
+    background-color: #f5f5f5;
+}
+
+.message-view {
+    flex: 2;
+    padding: 20px;
+    background: white;
+    border-left: 1px solid #ccc;
+}
+
+#composeScreen, #createFolderScreen {
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+#composeScreen h3, #createFolderScreen h3 {
     color: #00695c;
     margin-bottom: 15px;
 }
 
-#switchUser, #recipient {
-    padding: 8px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
-    max-width: 300px;
-    margin-bottom: 10px;
-}
-
-#message {
-    width: 100%;
-    max-width: 500px;
-    height: 100px;
+#composeScreen select, #composeScreen textarea, #createFolderScreen input {
+    display: block;
+    margin: 10px auto;
     padding: 10px;
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-bottom: 10px;
+    width: 100%;
+    max-width: 500px;
 }
 
-#chatScreen button {
+#composeScreen textarea {
+    height: 150px;
+}
+
+#composeScreen button, #createFolderScreen button {
     padding: 10px 20px;
     font-size: 1rem;
     background-color: #00695c;
@@ -118,35 +234,11 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin: 5px;
 }
 
-#chatScreen button:hover {
+#composeScreen button:hover, #createFolderScreen button:hover {
     background-color: #004d40;
-}
-
-#folderTabs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-#inboxList {
-    width: 100%;
-    max-width: 600px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-}
-
-#inboxList .messageItem {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    cursor: pointer;
-}
-
-#inboxList .messageItem:hover {
-    background-color: #f5f5f5;
 }
 
 #loginScreen, #createUserScreen {
@@ -165,8 +257,8 @@ h1 {
 }
 
 #loginScreen input, #createUserScreen input {
-    display: block; /* Sørger for, at inputfelterne er på hver sin linje */
-    margin: 10px auto; /* Centrerer inputfelterne og giver ensartet mellemrum */
+    display: block;
+    margin: 10px auto;
     padding: 10px;
     font-size: 1rem;
     border: 1px solid #ccc;
@@ -178,7 +270,7 @@ h1 {
 #loginScreen button, #createUserScreen button {
     padding: 10px 20px;
     font-size: 1rem;
-    background-color: #00695c; /* Turkis farve */
+    background-color: #00695c;
     color: white;
     border: none;
     border-radius: 5px;
@@ -188,20 +280,23 @@ h1 {
 }
 
 #loginScreen button:hover, #createUserScreen button:hover {
-    background-color: #004d40; /* Mørkere turkis ved hover */
+    background-color: #004d40;
 }
 
-#messageView {
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: 20px auto;
-    text-align: center;
-}
+/* Responsivt design */
+@media (max-width: 768px) {
+    .chat-container {
+        flex-direction: column;
+    }
 
-#messageView h3 {
-    color: #00695c;
-    margin-bottom: 15px;
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .message-view {
+        border-left: none;
+        border-top: 1px solid #ccc;
+    }
 }
