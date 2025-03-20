@@ -1,9 +1,9 @@
-/* styles.css */
+/* style.css */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif; /* Moderne skrifttype */
+    font-family: Arial, sans-serif;
 }
 
 html, body {
@@ -20,7 +20,7 @@ html, body {
     color: #333;
     padding: 20px;
     width: 100%;
-    height: 100vh; /* Fyld hele skærmens højde */
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -73,15 +73,14 @@ h1 {
     background-color: #004d40;
 }
 
-/* Chat-skærm */
 #chatScreen {
     padding: 20px;
     width: 100%;
-    min-height: 100vh; /* Fyld hele skærmen */
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: linear-gradient(135deg, #e0f7fa, #80deea); /* Samme gradient som forsiden */
+    background: linear-gradient(135deg, #e0f7fa, #80deea);
 }
 
 #chatScreen h2, #chatScreen h3 {
@@ -150,7 +149,6 @@ h1 {
     background-color: #f5f5f5;
 }
 
-/* Login og Opret Bruger skærme */
 #loginScreen, #createUserScreen {
     padding: 20px;
     background: white;
@@ -166,9 +164,10 @@ h1 {
     margin-bottom: 15px;
 }
 
-input {
-    margin: 10px 0;
-    padding: 8px;
+#loginScreen input, #createUserScreen input {
+    display: block; /* Sørger for, at inputfelterne er på hver sin linje */
+    margin: 10px auto; /* Centrerer inputfelterne og giver ensartet mellemrum */
+    padding: 10px;
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -176,7 +175,22 @@ input {
     max-width: 300px;
 }
 
-/* Beskedvisning */
+#loginScreen button, #createUserScreen button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #00695c; /* Turkis farve */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 5px;
+}
+
+#loginScreen button:hover, #createUserScreen button:hover {
+    background-color: #004d40; /* Mørkere turkis ved hover */
+}
+
 #messageView {
     padding: 20px;
     background: white;
