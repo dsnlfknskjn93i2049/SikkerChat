@@ -1,4 +1,22 @@
 // Globale funktioner
+// Tilføj disse funktioner øverst i script.js, før login()
+function showLogin() {
+    document.getElementById("welcomeScreen").style.display = "none";
+    document.getElementById("loginScreen").style.display = "block";
+}
+
+function showCreateUser() {
+    document.getElementById("welcomeScreen").style.display = "none";
+    document.getElementById("createUserScreen").style.display = "block";
+}
+
+function backToLogin() {
+    document.getElementById("createUserScreen").style.display = "none";
+    document.getElementById("loginScreen").style.display = "block";
+    document.getElementById("welcomeScreen").style.display = "none"; // Sørg for, at forsiden ikke vises
+}
+
+// [Resten af din script.js-kode forbliver uændret]
 async function login() {
     let username = document.getElementById("username").value.trim();
     let password = document.getElementById("password").value;
