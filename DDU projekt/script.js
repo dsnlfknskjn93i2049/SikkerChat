@@ -4,10 +4,10 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentUser = null;
-let currentFolder = "inbox";
+let currentFolder = "indbakke";
 
 // Standardmapper, som altid skal være til stede
-const DEFAULT_FOLDERS = ["inbox", "saved", "slettet"];
+const DEFAULT_FOLDERS = ["indbakke", "gemt", "slettet"];
 
 // RSA-funktioner
 function isPrime(n) {
@@ -132,7 +132,7 @@ function backToLogin() {
 
 function logout() {
     currentUser = null;
-    currentFolder = "inbox";
+    currentFolder = "indbakke";
     document.getElementById("chatScreen").style.display = "none";
     document.getElementById("welcomeScreen").style.display = "flex";
 }
@@ -149,8 +149,7 @@ async function login() {
             document.getElementById("chatScreen").style.display = "flex";
             document.getElementById("currentUserName").innerText = username;
             updateRecipientList();
-            updateFolderList();
-            showFolder("inbox");
+            showFolder("indbakke"); // Opdaterer folderList og viser indbakke
             updateUserSwitcher();
         } else {
             document.getElementById("loginOutput").innerText = "Forkert brugernavn eller adgangskode!";
@@ -254,7 +253,6 @@ async function createFolder() {
         document.getElementById("newFolderName").value = "";
         alert(`Mappen "${folderName}" blev oprettet!`);
         backToChat();
-        updateFolderList();
     } catch (error) {
         console.error("Fejl ved oprettelse af mappe:", error);
         alert("Fejl ved oprettelse af mappe: " + error.message);
@@ -263,11 +261,14 @@ async function createFolder() {
 
 async function updateFolderList() {
     let folderList = document.getElementById("folderList");
-    folderList.innerHTML = "";
+    folderList.innerHTML = ""; // Ryd listen for at undgå duplikater
     const users = await fetchUsers();
     let user = users.find(u => u.username === currentUser);
     let folders = user.folders || DEFAULT_FOLDERS;
     console.log("Hentede mapper fra Supabase:", folders);
+    // Fjern duplikater fra folders-listen
+    folders = [...new Set(folders)];
+    // Sørg for, at standardmapper altid er til stede
     DEFAULT_FOLDERS.forEach(defaultFolder => {
         if (!folders.includes(defaultFolder)) {
             folders.push(defaultFolder);
@@ -314,7 +315,7 @@ async function sendMessage() {
             recipient: recipient,
             encrypted: encrypted.map(num => num.toString()),
             hash: hash,
-            folder: "inbox"
+            folder: "indbakke"
         });
         if (error) throw new Error(error.message || "Ukendt fejl ved afsendelse");
         document.getElementById("output").innerText = "Besked sendt til " + recipient + "!";
@@ -382,8 +383,7 @@ async function switchUser() {
     currentUser = selectedUser;
     document.getElementById("currentUserName").innerText = selectedUser;
     updateRecipientList();
-    updateFolderList();
-    showFolder("inbox");
+    showFolder("indbakke");
 }
 
 async function fetchUsers() {
@@ -433,7 +433,7 @@ async function updateRecipientList() {
 async function showFolder(folder) {
     currentFolder = folder;
     document.getElementById("messageView").style.display = "none";
-    updateFolderList();
+    updateFolderList(); // Opdaterer folderList én gang
     let inboxList = document.getElementById("inboxList");
     inboxList.innerHTML = "";
     const messages = await fetchMessages();
