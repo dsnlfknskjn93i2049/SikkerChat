@@ -1,310 +1,181 @@
 /* style.css */
-* {
+body {
     margin: 0;
-    padding: 0;
-    box-sizing: border-box;
     font-family: Arial, sans-serif;
-}
-
-html, body {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    background: linear-gradient(135deg, #e0f7fa, #80deea);
-}
-
-#welcomeScreen {
-    text-align: center;
-    color: #333;
-    padding: 20px;
-    width: 100%;
+    background: linear-gradient(to bottom right, #3A6387, #183C5C);
+    color: #FFFFFF;
     height: 100vh;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.logo-container {
+#welcomeScreen, #loginScreen, #createUserScreen, #chatScreen, #composeScreen, #createFolderScreen {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 80%;
+    max-width: 600px;
+}
+
+#welcomeScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#welcomeScreen h1 {
+    color: #FFFFFF; /* Matcher logoets tekstfarve */
     margin-bottom: 20px;
 }
 
+.logo-container {
+    margin: 20px 0;
+}
+
 #logo {
-    width: 150px;
-    height: auto;
-}
-
-h1 {
-    font-size: 4rem;
-    margin-bottom: 10px;
-    color: #00695c;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.motto {
-    font-size: 1.5rem;
-    margin-bottom: 30px;
-    color: #555;
-    font-style: italic;
+    width: 200px; /* Øget fra 150px til 200px for at gøre logoet større */
 }
 
 .button-container {
-    position: absolute;
-    top: 20px;
-    right: 20px;
     display: flex;
     gap: 10px;
+    justify-content: center;
 }
 
-.button-container button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    background-color: #00695c;
-    color: white;
+button {
+    background-color: #688EB0;
+    color: #FFFFFF;
     border: none;
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
-.button-container button:hover {
-    background-color: #004d40;
+button:hover {
+    background-color: #B4DCFF;
+}
+
+input, textarea, select {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    background: #DEF0FF;
+    color: #183C5C;
+}
+
+textarea {
+    height: 100px;
+    resize: none;
 }
 
 #chatScreen {
-    width: 100%;
-    min-height: 100vh;
-    background: #f9f9f9;
+    width: 90%;
+    max-width: 1000px;
+    height: 80vh;
     display: flex;
     flex-direction: column;
 }
 
 .chat-header {
+    background: #A7C3DB;
+    padding: 10px;
+    border-radius: 10px 10px 0 0;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 10px 20px;
-    background: #00695c;
-    color: white;
+    align-items: center;
 }
 
 .chat-header h2 {
-    font-size: 1.5rem;
+    margin: 0;
+    color: #183C5C;
 }
 
 .logout-btn {
-    padding: 8px 15px;
-    background-color: #ff4444;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    background-color: #688EB0;
 }
 
 .logout-btn:hover {
-    background-color: #cc0000;
+    background-color: #B4DCFF;
 }
 
 .chat-container {
     display: flex;
     flex: 1;
-    min-height: calc(100vh - 60px);
+    background: #FFFFFF;
+    border-radius: 0 0 10px 10px;
+    overflow: hidden;
 }
 
 .sidebar {
     width: 200px;
-    background: #e0f7fa;
-    padding: 20px;
-    border-right: 1px solid #ccc;
-}
-
-.compose-btn {
-    width: 100%;
+    background: #A7C3DB;
     padding: 10px;
-    background-color: #00695c;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 20px;
-    transition: background-color 0.3s;
+    border-right: 1px solid #183C5C;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.compose-btn:hover {
-    background-color: #004d40;
+.compose-btn, .create-folder-btn {
+    background-color: #688EB0;
 }
 
-#folderList {
-    margin-bottom: 20px;
+.compose-btn:hover, .create-folder-btn:hover {
+    background-color: #B4DCFF;
 }
 
 .folder-item {
-    display: block;
     padding: 10px;
-    color: #333;
-    text-decoration: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.folder-item:hover, .folder-item.active {
-    background-color: #80deea;
-}
-
-.create-folder-btn {
-    width: 100%;
-    padding: 8px;
-    background-color: #555;
-    color: white;
-    border: none;
+    background: #DEF0FF;
     border-radius: 5px;
     cursor: pointer;
+    color: #183C5C;
     transition: background-color 0.3s;
 }
 
-.create-folder-btn:hover {
-    background-color: #333;
+.folder-item:hover {
+    background: #B4DCFF;
+}
+
+.folder-item.active {
+    background: #688EB0;
+    color: #FFFFFF;
 }
 
 .message-list {
     flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    background: white;
-}
-
-#inboxList .message-item {
-    display: flex;
-    justify-content: space-between;
     padding: 10px;
-    border-bottom: 1px solid #ddd;
-    cursor: pointer;
+    overflow-y: auto;
+    background: #FFFFFF;
 }
 
-#inboxList .message-item:hover {
-    background-color: #f5f5f5;
+.message-item {
+    padding: 10px;
+    border-bottom: 1px solid #A7C3DB;
+    cursor: pointer;
+    color: #183C5C;
+}
+
+.message-item:hover {
+    background: #DEF0FF;
 }
 
 .message-view {
-    flex: 2;
-    padding: 20px;
-    background: white;
-    border-left: 1px solid #ccc;
-}
-
-.message-view select {
-    padding: 8px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-right: 10px;
+    width: 300px;
+    background: #A7C3DB;
+    padding: 10px;
+    border-left: 1px solid #183C5C;
+    overflow-y: auto;
+    color: #183C5C;
 }
 
 #composeScreen, #createFolderScreen {
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: 20px auto;
-    text-align: center;
-}
-
-#composeScreen h3, #createFolderScreen h3 {
-    color: #00695c;
-    margin-bottom: 15px;
-}
-
-#composeScreen select, #composeScreen textarea, #createFolderScreen input {
-    display: block;
-    margin: 10px auto;
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
     max-width: 500px;
-}
-
-#composeScreen textarea {
-    height: 150px;
-}
-
-#composeScreen button, #createFolderScreen button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    background-color: #00695c;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin: 5px;
-}
-
-#composeScreen button:hover, #createFolderScreen button:hover {
-    background-color: #004d40;
-}
-
-#loginScreen, #createUserScreen {
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    margin: 20px auto;
-    text-align: center;
-}
-
-#loginScreen h2, #createUserScreen h2 {
-    color: #00695c;
-    margin-bottom: 15px;
-}
-
-#loginScreen input, #createUserScreen input {
-    display: block;
-    margin: 10px auto;
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
-    max-width: 300px;
-}
-
-#loginScreen button, #createUserScreen button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    background-color: #00695c;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin: 5px;
-}
-
-#loginScreen button:hover, #createUserScreen button:hover {
-    background-color: #004d40;
-}
-
-/* Responsivt design */
-@media (max-width: 768px) {
-    .chat-container {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #ccc;
-    }
-
-    .message-view {
-        border-left: none;
-        border-top: 1px solid #ccc;
-    }
 }
