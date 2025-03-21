@@ -13,27 +13,27 @@
         <div class="logo-container">
             <img src="logo.png" alt="SikkerChat Logo" id="logo">
         </div>
-        <h1>Velkommen til Sikker Chat</h1>
+        <h1>Velkommen til SikkerChat</h1>
         <p class="motto">Din sikre beskedtjeneste – krypteret og privat</p>
         <div class="button-container">
-            <button onclick="showLogin()">Login</button>
-            <button onclick="showCreateUser()">Opret Bruger</button>
+            <button onclick="showLogin()">Log ind</button>
+            <button onclick="showCreateUser()">Opret bruger</button>
         </div>
     </div>
 
     <div id="loginScreen" style="display: none;">
-        <h2>Login</h2>
+        <h2>Log ind</h2>
         <input type="text" id="username" placeholder="Brugernavn">
         <input type="password" id="password" placeholder="Adgangskode">
-        <button onclick="login()">Login</button>
+        <button onclick="login()">Log ind</button>
         <p id="loginOutput"></p>
         <button onclick="showWelcomeScreen()">Tilbage</button>
     </div>
 
     <div id="createUserScreen" style="display: none;">
-        <h2>Opret Bruger</h2>
-        <input type="text" id="newUser" placeholder="Nyt Brugernavn">
-        <input type="password" id="newPassword" placeholder="Ny Adgangskode">
+        <h2>Opret bruger</h2>
+        <input type="text" id="newUser" placeholder="Nyt brugernavn">
+        <input type="password" id="newPassword" placeholder="Ny adgangskode">
         <button onclick="addUser()">Opret</button>
         <p id="loginOutput"></p>
         <button onclick="backToLogin()">Tilbage</button>
@@ -60,7 +60,7 @@
                 <h3>Besked fra <span id="messageSender"></span></h3>
                 <p>Krypteret besked: <span id="encryptedMessage"></span></p>
                 <p>Oprindelig hash: <span id="originalHash"></span></p>
-                <button onclick="decryptAndCompare()">Dekrypter og Sammenlign Hash</button>
+                <button onclick="decryptAndCompare()">Dekrypter og sammenlign hash</button>
                 <p id="decryptedOutput"></p>
                 <p id="hashComparison"></p>
                 <div>
