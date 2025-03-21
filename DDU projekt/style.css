@@ -1,241 +1,310 @@
 /* style.css */
-body {
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     font-family: Arial, sans-serif;
-    background-color: #E0F7FA;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background: linear-gradient(135deg, #e0f7fa, #80deea);
 }
 
 #welcomeScreen {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end; /* Placerer knapperne i bunden */
-    align-items: center;
+    text-align: center;
+    color: #333;
+    padding: 20px;
     width: 100%;
     height: 100vh;
-    background-image: url('logo.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    padding-bottom: 50px; /* Afstand fra bunden */
-}
-
-.button-container {
     display: flex;
-    gap: 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-#welcomeScreen button {
-    padding: 15px 30px;
-    font-size: 18px;
-    background-color: #1E3A5F; /* Mørkeblå fra logoet */
-    color: #FFFFFF; /* Hvid tekst */
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.1s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-#welcomeScreen button:hover {
-    background-color: #2A4A7A; /* Lysere blå ved hover */
-    transform: scale(1.05);
-}
-
-#welcomeScreen button:active {
-    transform: scale(0.95);
-}
-
-#loginScreen, #createUserScreen {
-    background-color: #FFFFFF;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
-#loginScreen h2, #createUserScreen h2 {
+.logo-container {
     margin-bottom: 20px;
 }
 
-#loginScreen input, #createUserScreen input {
-    display: block;
-    width: 100%;
-    max-width: 300px;
-    margin: 10px auto;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+#logo {
+    width: 150px;
+    height: auto;
 }
 
-#loginScreen button, #createUserScreen button {
+h1 {
+    font-size: 4rem;
+    margin-bottom: 10px;
+    color: #00695c;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.motto {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    color: #555;
+    font-style: italic;
+}
+
+.button-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.button-container button {
     padding: 10px 20px;
-    background-color: #4CAF50;
+    font-size: 1rem;
+    background-color: #00695c;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin: 10px;
+    transition: background-color 0.3s;
 }
 
-#loginScreen button:hover, #createUserScreen button:hover {
-    background-color: #45a049;
-}
-
-#loginOutput {
-    color: red;
-    margin-top: 10px;
+.button-container button:hover {
+    background-color: #004d40;
 }
 
 #chatScreen {
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
+    background: #f9f9f9;
     display: flex;
     flex-direction: column;
 }
 
 .chat-header {
-    background-color: #4CAF50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: #00695c;
     color: white;
-    padding: 10px;
-    text-align: center;
+}
+
+.chat-header h2 {
+    font-size: 1.5rem;
+}
+
+.logout-btn {
+    padding: 8px 15px;
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #cc0000;
 }
 
 .chat-container {
     display: flex;
     flex: 1;
-    overflow: hidden;
+    min-height: calc(100vh - 60px);
 }
 
 .sidebar {
     width: 200px;
-    background-color: #E0F7FA;
-    padding: 10px;
+    background: #e0f7fa;
+    padding: 20px;
     border-right: 1px solid #ccc;
-    display: flex;
-    flex-direction: column;
 }
 
-.compose-btn, .create-folder-btn {
+.compose-btn {
+    width: 100%;
     padding: 10px;
-    background-color: #4CAF50;
+    background-color: #00695c;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s;
 }
 
-.compose-btn:hover, .create-folder-btn:hover {
-    background-color: #45a049;
+.compose-btn:hover {
+    background-color: #004d40;
 }
 
 #folderList {
-    flex: 1;
-    overflow-y: auto;
+    margin-bottom: 20px;
 }
 
 .folder-item {
+    display: block;
     padding: 10px;
+    color: #333;
+    text-decoration: none;
     cursor: pointer;
     border-radius: 5px;
-    margin-bottom: 5px;
 }
 
-.folder-item:hover {
-    background-color: #B2EBF2;
+.folder-item:hover, .folder-item.active {
+    background-color: #80deea;
 }
 
-.folder-item.active {
-    background-color: #80DEEA;
-    font-weight: bold;
+.create-folder-btn {
+    width: 100%;
+    padding: 8px;
+    background-color: #555;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.create-folder-btn:hover {
+    background-color: #333;
 }
 
 .message-list {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
+    background: white;
 }
 
-.message-item {
+#inboxList .message-item {
+    display: flex;
+    justify-content: space-between;
     padding: 10px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #ddd;
     cursor: pointer;
 }
 
-.message-item:hover {
-    background-color: #F5F5F5;
+#inboxList .message-item:hover {
+    background-color: #f5f5f5;
 }
 
 .message-view {
-    flex: 1;
+    flex: 2;
     padding: 20px;
-    background-color: #FFFFFF;
+    background: white;
     border-left: 1px solid #ccc;
 }
 
+.message-view select {
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
 #composeScreen, #createFolderScreen {
-    background-color: #FFFFFF;
     padding: 20px;
+    background: white;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 20px auto;
     text-align: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 
 #composeScreen h3, #createFolderScreen h3 {
-    margin-bottom: 20px;
+    color: #00695c;
+    margin-bottom: 15px;
 }
 
 #composeScreen select, #composeScreen textarea, #createFolderScreen input {
     display: block;
-    width: 100%;
-    max-width: 300px;
     margin: 10px auto;
     padding: 10px;
+    font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 5px;
+    width: 100%;
+    max-width: 500px;
 }
 
 #composeScreen textarea {
-    height: 100px;
-    resize: none;
+    height: 150px;
 }
 
 #composeScreen button, #createFolderScreen button {
     padding: 10px 20px;
-    background-color: #4CAF50;
+    font-size: 1rem;
+    background-color: #00695c;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin: 10px;
+    transition: background-color 0.3s;
+    margin: 5px;
 }
 
 #composeScreen button:hover, #createFolderScreen button:hover {
-    background-color: #45a049;
+    background-color: #004d40;
 }
 
-#output {
-    color: green;
-    margin-top: 10px;
+#loginScreen, #createUserScreen {
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 20px auto;
+    text-align: center;
 }
 
-.logout-btn {
-    background-color: #f44336;
+#loginScreen h2, #createUserScreen h2 {
+    color: #00695c;
+    margin-bottom: 15px;
+}
+
+#loginScreen input, #createUserScreen input {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 300px;
+}
+
+#loginScreen button, #createUserScreen button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #00695c;
     color: white;
     border: none;
-    padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 5px;
 }
 
-.logout-btn:hover {
-    background-color: #d32f2f;
+#loginScreen button:hover, #createUserScreen button:hover {
+    background-color: #004d40;
+}
+
+/* Responsivt design */
+@media (max-width: 768px) {
+    .chat-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .message-view {
+        border-left: none;
+        border-top: 1px solid #ccc;
+    }
 }
