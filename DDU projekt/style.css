@@ -175,12 +175,12 @@ textarea {
 .message-view {
     position: absolute;
     top: 0;
-    left: 220px; /* Justeret fra 200px til 220px for at tage højde for padding */
+    left: 220px;
     right: 0;
     bottom: 0;
     background: #FFFFFF;
-    padding: 20px 20px 20px 0; /* Fjernet venstre padding for at flugte med sidebar */
-    border-left: 1px solid #183C5C; /* Tilføjet kant for skarp overgang */
+    padding: 20px 20px 20px 0;
+    border-left: 1px solid #183C5C;
     overflow-y: auto;
     color: #183C5C;
     z-index: 10;
@@ -193,6 +193,8 @@ textarea {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    margin-left: 20px; /* Tilføjet for at rykke indholdet til venstre */
+    margin-right: 20px; /* Tilføjet for balance */
 }
 
 .message-header h3 {
@@ -201,7 +203,6 @@ textarea {
 
 .close-btn {
     background-color: #688EB0;
-    /* Fjernet specifik padding og font-size, så den arver fra button */
 }
 
 .close-btn:hover {
@@ -211,6 +212,8 @@ textarea {
 .message-content {
     flex: 1;
     overflow-y: auto;
+    margin-left: 20px; /* Tilføjet for at rykke indholdet til venstre */
+    margin-right: 20px; /* Tilføjet for balance */
 }
 
 .message-actions {
@@ -218,6 +221,8 @@ textarea {
     align-items: center;
     gap: 10px;
     margin-top: 20px;
+    margin-left: 20px; /* Tilføjet for at rykke indholdet til venstre */
+    margin-right: 20px; /* Tilføjet for balance */
 }
 
 .message-actions label {
