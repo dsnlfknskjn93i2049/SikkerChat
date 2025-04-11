@@ -58,18 +58,22 @@
                 <div id="inboxList"></div>
             </div>
             <div id="messageView" class="message-view" style="display: none;">
-                <h3>Besked fra <span id="messageSender"></span></h3>
-                <p>Krypteret besked: <span id="encryptedMessage"></span></p>
-                <p>Oprindelig hash: <span id="originalHash"></span></p>
-                <button onclick="decryptAndCompare()">Dekrypter og sammenlign hash</button>
-                <p id="decryptedOutput"></p>
-                <p id="hashComparison"></p>
-                <div>
+                <div class="message-header">
+                    <h3>Besked fra <span id="messageSender"></span></h3>
+                    <button onclick="backToInbox()" class="close-btn">Tilbage</button>
+                </div>
+                <div class="message-content">
+                    <p>Krypteret besked: <span id="encryptedMessage"></span></p>
+                    <p>Oprindelig hash: <span id="originalHash"></span></p>
+                    <button onclick="decryptAndCompare()">Dekrypter og sammenlign hash</button>
+                    <p id="decryptedOutput"></p>
+                    <p id="hashComparison"></p>
+                </div>
+                <div class="message-actions">
                     <label for="moveToFolder">Flyt til mappe:</label>
                     <select id="moveToFolder"></select>
                     <button onclick="moveMessage(document.getElementById('moveToFolder').value)">Flyt</button>
                 </div>
-                <button onclick="backToInbox()">Tilbage</button>
             </div>
         </div>
     </div>
