@@ -75,16 +75,21 @@
                     <button onclick="moveMessage(document.getElementById('moveToFolder').value)">Flyt</button>
                 </div>
             </div>
+            <div id="composeScreen" class="message-view" style="display: none;">
+                <div class="message-header">
+                    <h3>Skriv ny besked</h3>
+                    <button onclick="backToChat()" class="close-btn">Tilbage</button>
+                </div>
+                <div class="message-content">
+                    <select id="recipient"></select>
+                    <textarea id="message" placeholder="Skriv din besked her"></textarea>
+                    <p id="output"></p>
+                </div>
+                <div class="message-actions">
+                    <button onclick="sendMessage()">Send</button>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <div id="composeScreen" style="display: none;">
-        <h3>Skriv ny besked</h3>
-        <select id="recipient"></select>
-        <textarea id="message" placeholder="Skriv din besked her"></textarea>
-        <button onclick="sendMessage()">Send</button>
-        <button onclick="backToChat()">Annuller</button>
-        <p id="output"></p>
     </div>
 
     <div id="createFolderScreen" style="display: none;">
