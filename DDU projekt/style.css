@@ -10,7 +10,7 @@ body {
     align-items: center;
 }
 
-#welcomeScreen, #loginScreen, #createUserScreen, #chatScreen, #composeScreen, #createFolderScreen {
+#welcomeScreen, #loginScreen, #createUserScreen, #composeScreen, #createFolderScreen {
     background: rgba(255, 255, 255, 0.1);
     padding: 20px;
     border-radius: 10px;
@@ -63,8 +63,8 @@ input, textarea, select {
     width: 100%;
     max-width: 300px;
     padding: 10px;
-    margin: 10px auto; /* Centrerer inputfelterne */
-    display: block; /* Sørger for, at de tager hele linjen */
+    margin: 10px auto;
+    display: block;
     border: none;
     border-radius: 5px;
     background: #DEF0FF;
@@ -77,17 +77,21 @@ textarea {
 }
 
 #chatScreen {
-    width: 90%;
-    max-width: 1000px;
-    height: 80vh;
+    width: 100%; /* Fylde hele bredden */
+    height: 100vh; /* Fylde hele højden */
     display: flex;
     flex-direction: column;
+    margin: 0; /* Fjern margin */
+    padding: 0; /* Fjern padding */
+    background: none; /* Fjern baggrund */
+    box-shadow: none; /* Fjern skygge */
+    border-radius: 0; /* Fjern afrunding */
 }
 
 .chat-header {
     background: #A7C3DB;
     padding: 10px;
-    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid #183C5C;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -110,8 +114,7 @@ textarea {
     display: flex;
     flex: 1;
     background: #FFFFFF;
-    border-radius: 0 0 10px 10px;
-    overflow: hidden;
+    position: relative; /* Gør det muligt at placere #messageView absolut */
 }
 
 .sidebar {
@@ -155,6 +158,7 @@ textarea {
     padding: 10px;
     overflow-y: auto;
     background: #FFFFFF;
+    position: relative; /* Gør det muligt at placere #messageView indenfor dette område */
 }
 
 .message-item {
@@ -169,12 +173,16 @@ textarea {
 }
 
 .message-view {
-    width: 300px;
+    position: absolute;
+    top: 0;
+    left: 200px; /* Start efter sidebarens bredde */
+    right: 0;
+    bottom: 0;
     background: #A7C3DB;
     padding: 10px;
-    border-left: 1px solid #183C5C;
     overflow-y: auto;
     color: #183C5C;
+    z-index: 10; /* Sørger for, at den ligger ovenpå beskedlisten */
 }
 
 #composeScreen, #createFolderScreen {
