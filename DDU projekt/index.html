@@ -24,9 +24,11 @@
         <h2>Log ind</h2>
         <input type="text" id="username" placeholder="Brugernavn">
         <input type="password" id="password" placeholder="Adgangskode">
-        <button onclick="login()">Log ind</button>
+        <div class="button-container">
+            <button onclick="login()">Log ind</button>
+            <button onclick="showWelcomeScreen()">Tilbage</button>
+        </div>
         <p id="loginOutput"></p>
-        <button onclick="showWelcomeScreen()">Tilbage</button>
     </div>
 
     <div id="createUserScreen" style="display: none;">
