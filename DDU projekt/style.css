@@ -175,11 +175,12 @@ textarea {
 .message-view {
     position: absolute;
     top: 0;
-    left: 200px;
+    left: 220px; /* Justeret fra 200px til 220px for at tage højde for padding */
     right: 0;
     bottom: 0;
-    background: #FFFFFF; /* Ændret fra #A7C3DB til #FFFFFF */
-    padding: 20px;
+    background: #FFFFFF;
+    padding: 20px 20px 20px 0; /* Fjernet venstre padding for at flugte med sidebar */
+    border-left: 1px solid #183C5C; /* Tilføjet kant for skarp overgang */
     overflow-y: auto;
     color: #183C5C;
     z-index: 10;
@@ -200,8 +201,7 @@ textarea {
 
 .close-btn {
     background-color: #688EB0;
-    padding: 5px 10px;
-    font-size: 14px;
+    /* Fjernet specifik padding og font-size, så den arver fra button */
 }
 
 .close-btn:hover {
