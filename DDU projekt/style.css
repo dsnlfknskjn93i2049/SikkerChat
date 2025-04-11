@@ -77,15 +77,15 @@ textarea {
 }
 
 #chatScreen {
-    width: 100%; /* Fylde hele bredden */
-    height: 100vh; /* Fylde hele højden */
+    width: 100%;
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    margin: 0; /* Fjern margin */
-    padding: 0; /* Fjern padding */
-    background: none; /* Fjern baggrund */
-    box-shadow: none; /* Fjern skygge */
-    border-radius: 0; /* Fjern afrunding */
+    margin: 0;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
 }
 
 .chat-header {
@@ -114,7 +114,7 @@ textarea {
     display: flex;
     flex: 1;
     background: #FFFFFF;
-    position: relative; /* Gør det muligt at placere #messageView absolut */
+    position: relative;
 }
 
 .sidebar {
@@ -158,7 +158,7 @@ textarea {
     padding: 10px;
     overflow-y: auto;
     background: #FFFFFF;
-    position: relative; /* Gør det muligt at placere #messageView indenfor dette område */
+    position: relative;
 }
 
 .message-item {
@@ -175,14 +175,58 @@ textarea {
 .message-view {
     position: absolute;
     top: 0;
-    left: 200px; /* Start efter sidebarens bredde */
+    left: 200px;
     right: 0;
     bottom: 0;
-    background: #A7C3DB;
-    padding: 10px;
+    background: #FFFFFF; /* Ændret fra #A7C3DB til #FFFFFF */
+    padding: 20px;
     overflow-y: auto;
     color: #183C5C;
-    z-index: 10; /* Sørger for, at den ligger ovenpå beskedlisten */
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.message-header h3 {
+    margin: 0;
+}
+
+.close-btn {
+    background-color: #688EB0;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.close-btn:hover {
+    background-color: #B4DCFF;
+}
+
+.message-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.message-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.message-actions label {
+    margin: 0;
+}
+
+.message-actions select {
+    max-width: 150px;
+    margin: 0;
 }
 
 #composeScreen, #createFolderScreen {
