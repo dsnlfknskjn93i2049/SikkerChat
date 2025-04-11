@@ -201,12 +201,13 @@ async function addUser() {
 }
 
 function showCompose() {
-    document.getElementById("chatScreen").style.display = "none";
-    document.getElementById("composeScreen").style.display = "block";
+    document.getElementById("inboxList").style.display = "none";
+    document.getElementById("messageView").style.display = "none";
+    document.getElementById("composeScreen").style.display = "flex";
+    document.getElementById("message").value = "";
 }
 
 function backToChat() {
-    document.getElementById("composeScreen").style.display = "none";
     document.getElementById("createFolderScreen").style.display = "none";
     document.getElementById("chatScreen").style.display = "flex";
     showFolder(currentFolder);
@@ -318,12 +319,11 @@ async function sendMessage() {
             folder: "indbakke"
         });
         if (error) throw new Error(error.message || "Ukendt fejl ved afsendelse");
-        document.getElementById("output").innerText = "Besked sendt til " + recipient + "!";
         document.getElementById("message").value = "";
-        backToChat();
+        backToInbox();
     } catch (error) {
         console.error("Fejl ved kryptering:", error);
-        document.getElementById("output").innerText = "Fejl ved kryptering: " + error.message;
+        alert("Fejl ved kryptering: " + error.message);
     }
 }
 
@@ -376,6 +376,9 @@ async function moveMessage(folder) {
 
 function backToInbox() {
     document.getElementById("messageView").style.display = "none";
+    document.getElementById("composeScreen").style.display = "none";
+    document.getElementById("inboxList").style.display = "block";
+    showFolder(currentFolder);
 }
 
 async function switchUser() {
@@ -433,6 +436,8 @@ async function updateRecipientList() {
 async function showFolder(folder) {
     currentFolder = folder;
     document.getElementById("messageView").style.display = "none";
+    document.getElementById("composeScreen").style.display = "none";
+    document.getElementById("inboxList").style.display = "block";
     updateFolderList(); // Opdaterer folderList én gang
     let inboxList = document.getElementById("inboxList");
     inboxList.innerHTML = "";
@@ -457,6 +462,8 @@ async function showFolder(folder) {
 
 function openMessage(message) {
     currentMessageId = message.id;
+    document.getElementById("inboxList").style.display = "none";
+    document.getElementById("composeScreen").style.display = "none";
     document.getElementById("messageView").style.display = "block";
     document.getElementById("messageSender").innerText = message.sender;
     document.getElementById("encryptedMessage").innerText = message.encrypted.join(", ");
