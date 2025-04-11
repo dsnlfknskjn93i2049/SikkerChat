@@ -172,7 +172,7 @@ textarea {
     background: #DEF0FF;
 }
 
-.message-view {
+.message-view, .compose-view {
     position: absolute;
     top: 0;
     left: 220px;
@@ -209,15 +209,15 @@ textarea {
     background-color: #B4DCFF;
 }
 
-.message-content {
+.message-content, .compose-content {
     flex: 1;
     overflow-y: auto;
     margin-left: 20px;
     margin-right: 20px;
 }
 
-.message-content select, .message-content textarea {
-    max-width: 100%; /* Gør dropdown og tekstfelt bredere */
+.compose-content select, .compose-content textarea {
+    margin: 10px 0;
 }
 
 .message-actions {
