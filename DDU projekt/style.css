@@ -27,7 +27,7 @@ body {
 }
 
 #welcomeScreen h1 {
-    color: #FFFFFF; /* Matcher logoets tekstfarve */
+    color: #FFFFFF;
     margin-bottom: 20px;
 }
 
@@ -36,7 +36,7 @@ body {
 }
 
 #logo {
-    width: 200px; /* Øget fra 150px til 200px for at gøre logoet større */
+    width: 200px;
 }
 
 .button-container {
@@ -63,7 +63,8 @@ input, textarea, select {
     width: 100%;
     max-width: 300px;
     padding: 10px;
-    margin: 10px 0;
+    margin: 10px auto; /* Centrerer inputfelterne */
+    display: block; /* Sørger for, at de tager hele linjen */
     border: none;
     border-radius: 5px;
     background: #DEF0FF;
