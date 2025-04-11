@@ -10,7 +10,7 @@ body {
     align-items: center;
 }
 
-#welcomeScreen, #loginScreen, #createUserScreen, #composeScreen, #createFolderScreen {
+#welcomeScreen, #loginScreen, #createUserScreen, #createFolderScreen {
     background: rgba(255, 255, 255, 0.1);
     padding: 20px;
     border-radius: 10px;
@@ -193,8 +193,8 @@ textarea {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    margin-left: 20px; /* Tilføjet for at rykke indholdet til venstre */
-    margin-right: 20px; /* Tilføjet for balance */
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .message-header h3 {
@@ -212,8 +212,12 @@ textarea {
 .message-content {
     flex: 1;
     overflow-y: auto;
-    margin-left: 20px; /* Tilføjet for at rykke indholdet til venstre */
-    margin-right: 20px; /* Tilføjet for balance */
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.message-content select, .message-content textarea {
+    max-width: 100%; /* Gør dropdown og tekstfelt bredere */
 }
 
 .message-actions {
@@ -221,8 +225,8 @@ textarea {
     align-items: center;
     gap: 10px;
     margin-top: 20px;
-    margin-left: 20px; /* Tilføjet for at rykke indholdet til venstre */
-    margin-right: 20px; /* Tilføjet for balance */
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .message-actions label {
@@ -234,6 +238,6 @@ textarea {
     margin: 0;
 }
 
-#composeScreen, #createFolderScreen {
+#createFolderScreen {
     max-width: 500px;
 }
