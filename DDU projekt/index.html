@@ -75,17 +75,14 @@
                     <button onclick="moveMessage(document.getElementById('moveToFolder').value)">Flyt</button>
                 </div>
             </div>
-            <div id="composeScreen" class="message-view" style="display: none;">
+            <div id="composeScreen" class="compose-view" style="display: none;">
                 <div class="message-header">
                     <h3>Skriv ny besked</h3>
-                    <button onclick="backToChat()" class="close-btn">Tilbage</button>
+                    <button onclick="backToInbox()" class="close-btn">Tilbage</button>
                 </div>
-                <div class="message-content">
+                <div class="compose-content">
                     <select id="recipient"></select>
                     <textarea id="message" placeholder="Skriv din besked her"></textarea>
-                    <p id="output"></p>
-                </div>
-                <div class="message-actions">
                     <button onclick="sendMessage()">Send</button>
                 </div>
             </div>
