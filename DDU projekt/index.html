@@ -65,11 +65,11 @@
                 <div class="message-content">
                     <p>Krypteret besked: <span id="encryptedMessage"></span></p>
                     <p>Oprindelig hash: <span id="originalHash"></span></p>
-                    <button onclick="decryptAndCompare()">Dekrypter og sammenlign hash</button>
                     <p id="decryptedOutput"></p>
                     <p id="hashComparison"></p>
                 </div>
                 <div class="message-actions">
+                    <button onclick="decryptAndCompare()">Dekrypter og sammenlign hash</button>
                     <label for="moveToFolder">Flyt til mappe:</label>
                     <select id="moveToFolder"></select>
                     <button onclick="moveMessage(document.getElementById('moveToFolder').value)">Flyt</button>
