@@ -256,3 +256,7 @@ textarea {
     background-color: #DEF0FF;
     color: #183C5C;
 }
+#switchUser {
+    display: none; /* Gør elementet usynligt */
+    pointer-events: none; /* Gør det ikke-interaktivt, så man ikke kan klikke på det */
+}
