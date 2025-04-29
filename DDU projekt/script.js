@@ -502,24 +502,38 @@ async function generateHash(message) {
     }
 }
 
-// Tilføj den nye funktion HER
 async function deleteUser(username) {
+    // Tilføj en bekræftelsesdialog
+    if (!confirm("Er du sikker på, at du vil slette din konto og alle dine data? Dette kan ikke fortrydes.")) {
+        return; // Hvis brugeren klikker "Annuller", stopper vi her
+    }
+
     try {
-        const { error } = await supabase
+        console.log("Starter sletning for bruger:", username);
+
+        // Slet brugeren fra users-tabellen
+        const { data: userData, error: userError } = await supabase
             .from("users")
             .delete()
-            .eq("username", username);
-        if (error) throw error;
-        const { error: messagesError } = await supabase
+            .eq("username", username)
+            .select(); // Brug select() for at få det slettede data som bekræftelse
+        if (userError) throw new Error("Fejl ved sletning af bruger: " + userError.message);
+        console.log("Bruger slettet:", userData);
+
+        // Slet brugerens beskeder fra messages-tabellen
+        const { data: messagesData, error: messagesError } = await supabase
             .from("messages")
             .delete()
-            .or(`sender.eq.${username},recipient.eq.${username}`);
-        if (messagesError) throw messagesError;
+            .or(`sender.eq.${username},recipient.eq.${username}`)
+            .select(); // Brug select() for at få det slettede data som bekræftelse
+        if (messagesError) throw new Error("Fejl ved sletning af beskeder: " + messagesError.message);
+        console.log("Beskeder slettet:", messagesData);
+
         alert(`Bruger ${username} og alle tilhørende data blev slettet!`);
         logout();
     } catch (error) {
-        console.error("Fejl ved sletning af bruger:", error);
-        alert("Fejl ved sletning af bruger: " + error.message);
+        console.error("Fejl ved sletning:", error.message);
+        alert("Fejl ved sletning: " + error.message);
     }
 }
 
