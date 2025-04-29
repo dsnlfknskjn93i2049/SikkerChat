@@ -241,3 +241,18 @@ textarea {
 #createFolderScreen {
     max-width: 500px;
 }
+
+.delete-button {
+    background-color: #183C5C;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.delete-button:hover {
+    background-color: #DEF0FF;
+    color: #183C5C;
+}
