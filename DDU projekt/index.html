@@ -1,100 +1,100 @@
 <!DOCTYPE html>
-<html lang="da">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SikkerChat</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js"></script>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div id="welcomeScreen">
-        <h1>Velkommen til SikkerChat</h1>
-        <div class="logo-container">
-            <img src="logo.png" alt="SikkerChat Logo" id="logo">
-        </div>
-        <div class="button-container">
-            <button onclick="showLogin()">Log ind</button>
-            <button onclick="showCreateUser()">Opret bruger</button>
-        </div>
-    </div>
-
-    <div id="loginScreen" style="display: none;">
-        <h2>Log ind</h2>
-        <input type="text" id="username" placeholder="Brugernavn">
-        <input type="password" id="password" placeholder="Adgangskode">
-        <div class="button-container">
-            <button onclick="login()">Log ind</button>
-            <button onclick="showWelcomeScreen()">Tilbage</button>
-        </div>
-        <p id="loginOutput"></p>
-    </div>
-
-    <div id="createUserScreen" style="display: none;">
-        <h2>Opret bruger</h2>
-        <input type="text" id="newUser" placeholder="Nyt brugernavn">
-        <input type="password" id="newPassword" placeholder="Ny adgangskode">
-        <button onclick="addUser()">Opret</button>
-        <p id="loginOutput"></p>
-        <button onclick="backToLogin()">Tilbage</button>
-    </div>
-
-    <div id="chatScreen" style="display: none;">
-        <div class="chat-header">
-    <h2>Chat som <span id="currentUserName"></span></h2>
-    <select id="switchUser" onchange="switchUser()"></select>
-    <button onclick="logout()" class="logout-btn">Log ud</button>
-    <button onclick="deleteUser(currentUser)" class="delete-button">Slet og glem mine data</button>
-</div>
-        <div class="chat-container">
-            <div class="sidebar">
-                <button onclick="showCompose()" class="compose-btn">Skriv</button>
-                <div id="folderList">
-                    <!-- Mapper tilføjes dynamisk via JavaScript -->
-                </div>
-                <button onclick="showCreateFolder()" class="create-folder-btn">Ny mappe</button>
-            </div>
-            <div class="message-list">
-                <div id="inboxList"></div>
-            </div>
-            <div id="messageView" class="message-view" style="display: none;">
-                <div class="message-header">
-                    <h3>Besked fra <span id="messageSender"></span></h3>
-                    <button onclick="backToInbox()" class="close-btn">Tilbage</button>
-                </div>
-                <div class="message-content">
-                    <p>Krypteret besked: <span id="encryptedMessage"></span></p>
-                    <p>Oprindelig hash: <span id="originalHash"></span></p>
-                    <p id="decryptedOutput"></p>
-                    <p id="hashComparison"></p>
-                </div>
-                <div class="message-actions">
-                    <button onclick="decryptAndCompare()">Dekrypter og sammenlign hash</button>
-                    <label for="moveToFolder">Flyt til mappe:</label>
-                    <select id="moveToFolder"></select>
-                    <button onclick="moveMessage(document.getElementById('moveToFolder').value)">Flyt</button>
-                </div>
-            </div>
-            <div id="composeScreen" class="compose-view" style="display: none;">
-                <div class="message-header">
-                    <h3>Skriv ny besked</h3>
-                    <button onclick="backToInbox()" class="close-btn">Tilbage</button>
-                </div>
-                <div class="compose-content">
-                    <select id="recipient"></select>
-                    <textarea id="message" placeholder="Skriv din besked her"></textarea>
-                    <button onclick="sendMessage()">Send</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="createFolderScreen" style="display: none;">
-        <h3>Opret ny mappe</h3>
-        <input type="text" id="newFolderName" placeholder="Mappenavn">
-        <button onclick="createFolder()">Opret</button>
-        <button onclick="backToChat()">Annuller</button>
-    </div>
-</body>
-</html>
+ <html lang="da">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>SikkerChat</title>
+     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+     <script src="script.js"></script>
+     <link rel="stylesheet" href="style.css">
+ </head>
+ <body>
+     <div id="welcomeScreen">
+         <h1>Velkommen til SikkerChat</h1>
+         <div class="logo-container">
+             <img src="logo.png" alt="SikkerChat Logo" id="logo">
+         </div>
+         <div class="button-container">
+             <button onclick="showLogin()">Log ind</button>
+             <button onclick="showCreateUser()">Opret bruger</button>
+         </div>
+     </div>
+ 
+     <div id="loginScreen" style="display: none;">
+         <h2>Log ind</h2>
+         <input type="text" id="username" placeholder="Brugernavn">
+         <input type="password" id="password" placeholder="Adgangskode">
+         <div class="button-container">
+             <button onclick="login()">Log ind</button>
+             <button onclick="showWelcomeScreen()">Tilbage</button>
+         </div>
+         <p id="loginOutput"></p>
+     </div>
+ 
+     <div id="createUserScreen" style="display: none;">
+         <h2>Opret bruger</h2>
+         <input type="text" id="newUser" placeholder="Nyt brugernavn">
+         <input type="password" id="newPassword" placeholder="Ny adgangskode">
+         <button onclick="addUser()">Opret</button>
+         <p id="loginOutput"></p>
+         <button onclick="backToLogin()">Tilbage</button>
+     </div>
+ 
+     <div id="chatScreen" style="display: none;">
+         <div class="chat-header">
+             <h2>Chat som <span id="currentUserName"></span></h2>
+             <select id="switchUser" onchange="switchUser()"></select>
+             <button onclick="logout()" class="logout-btn">Log ud</button>
+             <button onclick="deleteUser(currentUser)" class="delete-button">Slet og glem mine data</button>
+         </div>
+         <div class="chat-container">
+             <div class="sidebar">
+                 <button onclick="showCompose()" class="compose-btn">Skriv</button>
+                 <div id="folderList">
+                     <!-- Mapper tilføjes dynamisk via JavaScript -->
+                 </div>
+                 <button onclick="showCreateFolder()" class="create-folder-btn">Ny mappe</button>
+             </div>
+             <div class="message-list">
+                 <div id="inboxList"></div>
+             </div>
+             <div id="messageView" class="message-view" style="display: none;">
+                 <div class="message-header">
+                     <h3>Besked fra <span id="messageSender"></span></h3>
+                     <button onclick="backToInbox()" class="close-btn">Tilbage</button>
+                 </div>
+                 <div class="message-content">
+                     <p>Krypteret besked: <span id="encryptedMessage"></span></p>
+                     <p>Oprindelig hash: <span id="originalHash"></span></p>
+                     <p id="decryptedOutput"></p>
+                     <p id="hashComparison"></p>
+                 </div>
+                 <div class="message-actions">
+                     <button onclick="decryptAndCompare()">Dekrypter og sammenlign hash</button>
+                     <label for="moveToFolder">Flyt til mappe:</label>
+                     <select id="moveToFolder"></select>
+                     <button onclick="moveMessage(document.getElementById('moveToFolder').value)">Flyt</button>
+                 </div>
+             </div>
+             <div id="composeScreen" class="compose-view" style="display: none;">
+                 <div class="message-header">
+                     <h3>Skriv ny besked</h3>
+                     <button onclick="backToInbox()" class="close-btn">Tilbage</button>
+                 </div>
+                 <div class="compose-content">
+                     <select id="recipient"></select>
+                     <textarea id="message" placeholder="Skriv din besked her"></textarea>
+                     <button onclick="sendMessage()">Send</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+ 
+     <div id="createFolderScreen" style="display: none;">
+         <h3>Opret ny mappe</h3>
+         <input type="text" id="newFolderName" placeholder="Mappenavn">
+         <button onclick="createFolder()">Opret</button>
+         <button onclick="backToChat()">Annuller</button>
+     </div>
+ </body>
+ </html>
