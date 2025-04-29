@@ -502,9 +502,29 @@ async function generateHash(message) {
     }
 }
 
+// Tilføj den nye funktion HER
+async function deleteUser(username) {
+    try {
+        const { error } = await supabase
+            .from("users")
+            .delete()
+            .eq("username", username);
+        if (error) throw error;
+        const { error: messagesError } = await supabase
+            .from("messages")
+            .delete()
+            .or(`sender.eq.${username},recipient.eq.${username}`);
+        if (messagesError) throw messagesError;
+        alert(`Bruger ${username} og alle tilhørende data blev slettet!`);
+        logout();
+    } catch (error) {
+        console.error("Fejl ved sletning af bruger:", error);
+        alert("Fejl ved sletning af bruger: " + error.message);
+    }
+}
+
 // Bind event listeners, når DOM'en er fuldt indlæst
 window.onload = function() {
-    // Lyt efter "Enter" på login-skærmen
     const usernameInput = document.getElementById("username");
     const passwordInput = document.getElementById("password");
     const messageInput = document.getElementById("message");
