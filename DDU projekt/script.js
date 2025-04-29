@@ -503,9 +503,8 @@ async function generateHash(message) {
 }
 
 async function deleteUser(username) {
-    // Tilføj en bekræftelsesdialog
     if (!confirm("Er du sikker på, at du vil slette din konto og alle dine data? Dette kan ikke fortrydes.")) {
-        return; // Hvis brugeren klikker "Annuller", stopper vi her
+        return;
     }
 
     try {
@@ -516,7 +515,7 @@ async function deleteUser(username) {
             .from("users")
             .delete()
             .eq("username", username)
-            .select(); // Brug select() for at få det slettede data som bekræftelse
+            .select();
         if (userError) throw new Error("Fejl ved sletning af bruger: " + userError.message);
         console.log("Bruger slettet:", userData);
 
@@ -525,7 +524,7 @@ async function deleteUser(username) {
             .from("messages")
             .delete()
             .or(`sender.eq.${username},recipient.eq.${username}`)
-            .select(); // Brug select() for at få det slettede data som bekræftelse
+            .select();
         if (messagesError) throw new Error("Fejl ved sletning af beskeder: " + messagesError.message);
         console.log("Beskeder slettet:", messagesData);
 
